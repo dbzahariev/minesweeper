@@ -14,7 +14,17 @@ const App: React.FC = () => {
 
   const renderCells = (): React.ReactNode => {
     return cells.map((row, rowIndex) =>
-      row.map((cell, cellIndex) => <Button key={`${rowIndex - cellIndex}`} />)
+      row.map((cell, cellIndex) => {
+        return (
+          <Button
+            key={`${rowIndex - cellIndex}`}
+            state={cell.state}
+            value={cell.value}
+            row={rowIndex}
+            col={cellIndex}
+          />
+        );
+      })
     );
   };
 

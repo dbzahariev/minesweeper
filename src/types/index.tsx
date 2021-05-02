@@ -6,6 +6,8 @@ export enum CellValue {
   four,
   five,
   six,
+  seven,
+  eight,
   bomb,
 }
 
