@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { CellState, Face } from "../../types";
-import { generateCells } from "../../utils";
+import { Cell, CellState, CellValue, Face } from "../../types";
+import { generateCells, openMultipleCells } from "../../utils";
 import NumberDisplay from "../NumberDisplay";
 import Button from "../Button";
 import "./App.scss";
@@ -9,7 +9,7 @@ import { NO_OF_BOMBS } from "../../constants";
 const App: React.FC = () => {
   const [cells, setCells] = useState(generateCells());
   const [face, setFace] = useState<Face>(Face.smile);
-  const [time, setTime] = useState<number>(995);
+  const [time, setTime] = useState<number>(0);
   const [live, setLive] = useState<boolean>(false);
   const [bombCounter, setBombCounter] = useState(NO_OF_BOMBS);
 
@@ -49,9 +49,32 @@ const App: React.FC = () => {
 
   const handleCellClick = (rowParam: number, colParam: number) => (): void => {
     if (!live) {
+      // TODO: Check for Bomb
+
       setLive(true);
     }
-    console.log("Left click", rowParam, colParam);
+
+    let newCells: Cell[][] = cells.slice();
+    const currentCell = cells[rowParam][colParam];
+
+    if ([CellState.flagged, CellState.visible].includes(currentCell.state)) {
+      console.log("Click on flag or visible");
+      // newCells = openMultipleCells(cells.slice(), rowParam, colParam);
+      return;
+    }
+
+    if (currentCell.value === CellValue.bomb) {
+      // TODO: Take care of bomb click
+    } else if (currentCell.value === CellValue.none) {
+      newCells = openMultipleCells(cells, rowParam, colParam);
+      // TODO: Do that
+    } else {
+      newCells[rowParam][colParam].state = CellState.visible;
+    }
+
+    setCells(newCells);
+
+    // console.log("Left click", rowParam, colParam);
   };
   const handleCellRightClick = (rowParam: number, colParam: number) => (
     e: React.MouseEvent<HTMLDivElement>
@@ -66,7 +89,7 @@ const App: React.FC = () => {
     const currentCell = cells[rowParam][colParam];
     if (currentCell.state === CellState.visible) {
       return;
-    } else if (currentCell.state === CellState.open && bombCounter < -99) {
+    } else if (currentCell.state === CellState.open && bombCounter > -99) {
       currentCells[rowParam][colParam].state = CellState.flagged;
       setCells(currentCells);
       setBombCounter(bombCounter - 1);
@@ -75,8 +98,6 @@ const App: React.FC = () => {
       setCells(currentCells);
       setBombCounter(bombCounter + 1);
     }
-
-    // console.log("Right click", rowParam, colParam);
   };
 
   const renderCells = (): React.ReactNode => {
@@ -106,6 +127,24 @@ const App: React.FC = () => {
     }
   };
 
+  const handleRevalBombs = () => {
+    let newCells = cells.slice();
+    for (let rowIndex = 0; rowIndex < newCells.length; rowIndex++) {
+      for (let colIndex = 0; colIndex < newCells.length; colIndex++) {
+        let cc = cells[rowIndex][colIndex];
+        console.log(cc);
+        if (cc.state !== CellState.visible) {
+          if (cc.state !== CellState.flagged) {
+            if (cc.value !== CellValue.bomb) {
+              cc.state = CellState.visible;
+            }
+          }
+        }
+      }
+    }
+    setCells(newCells);
+  };
+
   return (
     <div className="App">
       <div className="Header">
@@ -118,6 +157,7 @@ const App: React.FC = () => {
         <NumberDisplay value={time} />
       </div>
       <div className="Body">{renderCells()}</div>
+      <button onClick={handleRevalBombs}>Reval</button>
     </div>
   );
 };
