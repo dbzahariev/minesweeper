@@ -2,7 +2,10 @@
 
 .Button {
   @include borders;
-  @include buttons;
+
+  &.live {
+    @include buttons;
+  }
   align-items: center;
   display: flex;
   font-weight: bold;

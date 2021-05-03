@@ -1,7 +1,6 @@
 import { MAX_ROWS, MAX_COLS, NO_OF_BOMBS } from "../constants";
 import { Cell, CellState, CellValue } from "../types";
 
-// eslint-disable-next-line
 const generateBombs = (
   cells2: Cell[][],
   numberOfBombs: number = NO_OF_BOMBS
@@ -23,30 +22,6 @@ const generateBombs = (
         })
       );
       bombPlaced++;
-    }
-  }
-  return cells;
-};
-
-// eslint-disable-next-line
-const generateFlags = (cells2: Cell[][], countFlag: number = 5) => {
-  let cells = [...cells2];
-  let flagPlaced = 0;
-  while (flagPlaced < countFlag) {
-    const randomRow = Math.floor(Math.random() * MAX_ROWS);
-    const randomCol = Math.floor(Math.random() * MAX_COLS);
-    const currentCell = cells[randomRow][randomCol];
-    if (currentCell.state !== CellState.flagged) {
-      cells = cells.map((row, rowIndex) =>
-        row.map((cell, colIndex) => {
-          if (randomRow === rowIndex && randomCol === colIndex) {
-            return { ...cell, state: CellState.flagged };
-          } else {
-            return cell;
-          }
-        })
-      );
-      flagPlaced++;
     }
   }
   return cells;
@@ -107,15 +82,12 @@ export const generateCells = (): Cell[][] => {
   for (let row = 0; row < MAX_ROWS; row++) {
     cells.push([]);
     for (let col = 0; col < MAX_COLS; col++) {
-      cells[row].push({ value: CellValue.none, state: CellState.open }); // TODO: Thus default is must be state: CellState.open
+      cells[row].push({ value: CellValue.none, state: CellState.open });
     }
   }
 
   // Randomly put 10 bombs
   cells = generateBombs(cells, NO_OF_BOMBS);
-
-  // Randomly put 5 flags
-  // cells = generateFlags(cells, 5);
 
   // Calculate the number for each cell
   for (let rowIndex = 0; rowIndex < MAX_ROWS; rowIndex++) {

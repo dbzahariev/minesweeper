@@ -7,9 +7,12 @@ const Button: React.FC<{
   col: number;
   state: CellState;
   value: CellValue;
+  live: boolean;
+  red?: boolean;
+  hesDie: boolean;
   onClick(rowParam: number, colParam: number): (...args: any[]) => void;
   onContext(rowParam: number, colParam: number): (...args: any[]) => void;
-}> = ({ state, value, row, col, onClick, onContext }) => {
+}> = ({ state, value, row, col, onClick, onContext, red, live, hesDie }) => {
   const renderContent = (): React.ReactNode => {
     if (state === CellState.visible) {
       if (value === CellValue.bomb) {
@@ -38,8 +41,8 @@ const Button: React.FC<{
     <div
       className={`Button ${
         state === CellState.visible ? "visible" : ""
-      } value-${value}`}
-      onClick={onClick(row, col)}
+      } value-${value} ${red ? "red" : ""} ${live ? "live" : ""}`}
+      onClick={!hesDie ? onClick(row, col) : () => {}}
       onContextMenu={onContext(row, col)}
     >
       {renderContent()}

@@ -7,14 +7,19 @@ import "./App.scss";
 import { NO_OF_BOMBS } from "../../constants";
 
 const App: React.FC = () => {
-  const [cells, setCells] = useState(generateCells());
+  const [cells, setCells] = useState<Cell[][]>(generateCells());
   const [face, setFace] = useState<Face>(Face.smile);
   const [time, setTime] = useState<number>(0);
   const [live, setLive] = useState<boolean>(false);
-  const [bombCounter, setBombCounter] = useState(NO_OF_BOMBS);
+  const [bombCounter, setBombCounter] = useState<number>(NO_OF_BOMBS);
+  const [hesLost, setHesLost] = useState<boolean>(false);
+  const [hesWon, setHesWon] = useState<boolean>(false);
 
   useEffect(() => {
     const handleMouseDownAndUp = (e: any): void => {
+      if (!live) {
+        return;
+      }
       let isButton: boolean = e.target.className
         .toString()
         .startsWith("Button");
@@ -33,7 +38,7 @@ const App: React.FC = () => {
       window.removeEventListener("mouseup", handleMouseDownAndUp);
       window.removeEventListener("mousedown", handleMouseDownAndUp);
     };
-  }, []);
+  }, [live]);
 
   useEffect(() => {
     if (live && time < 999) {
@@ -47,35 +52,85 @@ const App: React.FC = () => {
     }
   }, [live, time]);
 
-  const handleCellClick = (rowParam: number, colParam: number) => (): void => {
-    if (!live) {
-      // TODO: Check for Bomb
+  useEffect(() => {
+    if (hesLost) {
+      setLive(false);
+      setFace(Face.lost);
+    } else {
+      setFace(Face.smile);
+    }
+  }, [hesLost]);
 
+  useEffect(() => {
+    if (hesWon) {
+      setLive(false);
+      setFace(Face.won);
+    }
+  }, [hesWon]);
+
+  const handleCellClick = (rowParam: number, colParam: number) => (): void => {
+    let newCells: Cell[][] = cells.slice();
+
+    if (!live) {
+      let isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
+      while (isBomb) {
+        newCells = generateCells();
+        isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
+      }
       setLive(true);
     }
-
-    let newCells: Cell[][] = cells.slice();
-    const currentCell = cells[rowParam][colParam];
+    const currentCell = newCells[rowParam][colParam];
 
     if ([CellState.flagged, CellState.visible].includes(currentCell.state)) {
-      console.log("Click on flag or visible");
-      // newCells = openMultipleCells(cells.slice(), rowParam, colParam);
       return;
     }
 
     if (currentCell.value === CellValue.bomb) {
-      // TODO: Take care of bomb click
+      setHesLost(true);
+      newCells = showAllBombs();
+      newCells[rowParam][colParam].red = true;
+      setCells(newCells);
+      return;
     } else if (currentCell.value === CellValue.none) {
       newCells = openMultipleCells(cells, rowParam, colParam);
-      // TODO: Do that
     } else {
+      // Click on a number
       newCells[rowParam][colParam].state = CellState.visible;
     }
 
-    setCells(newCells);
+    // Check Won
+    let safeOpenCellsExist: boolean = getSafeOpenCellsExist(cells);
+    if (!safeOpenCellsExist) {
+      newCells.map((row) =>
+        row.map((cell) => {
+          if (cell.value === CellValue.bomb) {
+            return { ...cell, state: CellState.flagged };
+          }
+          return cell;
+        })
+      );
+      setHesWon(true);
+    }
 
-    // console.log("Left click", rowParam, colParam);
+    setCells(newCells);
   };
+
+  const getSafeOpenCellsExist = (cells: Cell[][]) => {
+    let numberOfOpenCells = 0;
+    cells.forEach((rows) =>
+      rows.forEach((currentCell) => {
+        if (
+          currentCell.value !== CellValue.bomb &&
+          currentCell.state === CellState.open
+        ) {
+          numberOfOpenCells++;
+        }
+      })
+    );
+
+    return numberOfOpenCells > 0;
+  };
+
   const handleCellRightClick = (rowParam: number, colParam: number) => (
     e: React.MouseEvent<HTMLDivElement>
   ): void => {
@@ -105,9 +160,12 @@ const App: React.FC = () => {
       row.map((cell, cellIndex) => {
         return (
           <Button
+            live={live}
+            hesDie={hesLost || hesWon}
             key={`${rowIndex - cellIndex}`}
             state={cell.state}
             value={cell.value}
+            red={cell.red}
             onClick={handleCellClick}
             onContext={handleCellRightClick}
             row={rowIndex}
@@ -119,30 +177,26 @@ const App: React.FC = () => {
   };
 
   const handleFaceClick = (): void => {
-    console.log("Click face");
-    if (live) {
-      setLive(false);
-      setTime(0);
-      setCells(generateCells());
-    }
+    setLive(false);
+    setTime(0);
+    setBombCounter(NO_OF_BOMBS);
+    setCells(generateCells());
+    setHesLost(false);
+    setHesWon(false);
+    setFace(Face.smile);
   };
 
-  const handleRevalBombs = () => {
-    let newCells = cells.slice();
-    for (let rowIndex = 0; rowIndex < newCells.length; rowIndex++) {
-      for (let colIndex = 0; colIndex < newCells.length; colIndex++) {
-        let cc = cells[rowIndex][colIndex];
-        console.log(cc);
-        if (cc.state !== CellState.visible) {
-          if (cc.state !== CellState.flagged) {
-            if (cc.value !== CellValue.bomb) {
-              cc.state = CellState.visible;
-            }
-          }
+  const showAllBombs = (): Cell[][] => {
+    let currentCells = cells.slice();
+
+    return currentCells.map((row) =>
+      row.map((cell) => {
+        if (cell.value === CellValue.bomb) {
+          return { ...cell, state: CellState.visible };
         }
-      }
-    }
-    setCells(newCells);
+        return cell;
+      })
+    );
   };
 
   return (
@@ -157,7 +211,6 @@ const App: React.FC = () => {
         <NumberDisplay value={time} />
       </div>
       <div className="Body">{renderCells()}</div>
-      <button onClick={handleRevalBombs}>Reval</button>
     </div>
   );
 };
