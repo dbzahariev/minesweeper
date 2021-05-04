@@ -2,7 +2,7 @@
   "name": "minesweeper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd client && npm run build",
@@ -11,10 +11,6 @@
     "start": "node server.js",
     "client": "cd client && npm start",
     "dev": "concurrently -n 'server,client' -c 'red,green'  \"nodemon server.js\" \"npm run client\""
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dbzahariev/minesweeper.git"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +21,10 @@
     "express": "^4.17.1",
     "mongoose": "^5.7.9",
     "morgan": "^1.9.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dbzahariev/minesweeper.git"
   },
   "bugs": {
     "url": "https://github.com/dbzahariev/minesweeper/issues"
