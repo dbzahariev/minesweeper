@@ -9,28 +9,13 @@ const Games = require("../models/games");
 router.get("/", (req, res) => {
   Games.find({})
     .then((data) => {
-      // console.log("Data: ", data);
+      console.log("Return data");
       res.json(data);
     })
     .catch((error) => {
       console.log("error: ", daerrorta);
     });
 });
-
-// router.put("/put/:owner", (req, res) => {
-//   const game = Games.find((game) => {
-//     game?.owner === "rame";
-//   }).then((data) => {
-//     console.log(data);
-//   });
-//   // console.log(game);
-//   // game.owner = "rr";
-
-//   // if (!game) return res.status(404).json({});
-
-//   // game.name = req.body.name;
-//   res.json({});
-// });
 
 router.post("/save", (req, res) => {
   const data = req.body;
