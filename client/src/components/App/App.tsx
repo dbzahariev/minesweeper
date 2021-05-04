@@ -257,7 +257,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      {"22:06"}
+      {"24:00"}
       <button onClick={submit}>create games</button>
       <div className="Header">
         <NumberDisplay value={bombCounter} />
