@@ -209,7 +209,6 @@ const App: React.FC = () => {
         // this.setState({ posts: data });
         data.forEach((data: any) => {
           let { owner, games } = data;
-          games = JSON.parse(games);
 
           console.log(`owner: ${owner} games: `, games);
         });
@@ -234,7 +233,7 @@ const App: React.FC = () => {
 
     const payload = {
       owner: "rame",
-      games: JSON.stringify(allGames),
+      games: allGames,
     };
 
     axios({
@@ -246,8 +245,9 @@ const App: React.FC = () => {
         console.log("Data has been sent to the server");
         testServer();
       })
-      .catch(() => {
-        console.log("Internal server error");
+      .catch((err) => {
+        console.error(err);
+        // console.log("Internal server error");
       });
   };
 
@@ -258,7 +258,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       {"22:06"}
-      <button onClick={submit}>t submit</button>
+      <button onClick={submit}>create games</button>
       <div className="Header">
         <NumberDisplay value={bombCounter} />
         <div className="Face">

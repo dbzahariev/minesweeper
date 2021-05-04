@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const GamesSchema = new Schema({
   owner: String,
-  games: String,
+  games: Array,
   date: {
     type: String,
     default: Date.now(),
