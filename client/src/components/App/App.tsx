@@ -207,7 +207,13 @@ const App: React.FC = () => {
       .then((response) => {
         const data = response.data;
         // this.setState({ posts: data });
-        console.log(data);
+        data.forEach((data: any) => {
+          let { owner, games } = data;
+          games = JSON.parse(games);
+
+          console.log(`owner: ${owner} games: `, games);
+        });
+
         console.log("Data has been received!!");
       })
       .catch(() => {
@@ -216,9 +222,19 @@ const App: React.FC = () => {
   };
 
   const submit = () => {
+    const oneGame = {
+      time: 10,
+      date: new Date(),
+    };
+    const twoGame = {
+      time: 20,
+      date: new Date(),
+    };
+    const allGames = [oneGame, twoGame];
+
     const payload = {
-      title: "hi",
-      body: "body 3",
+      owner: "rame",
+      games: JSON.stringify(allGames),
     };
 
     axios({

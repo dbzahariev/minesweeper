@@ -12,7 +12,6 @@ const routes = require("./routes/api");
 // Step 2
 let newUrl =
   "mongodb+srv://ramsess90:Abc123456@cluster0.ewmw7.mongodb.net/db1?retryWrites=true&w=majority";
-let oldUrl = "mongodb://localhost/mern_youtube";
 
 mongoose.connect(process.env.MONGODB_URI || newUrl, {
   useNewUrlParser: true,
