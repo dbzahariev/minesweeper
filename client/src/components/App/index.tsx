@@ -5,6 +5,7 @@ import NumberDisplay from "../NumberDisplay";
 import Button from "../Button";
 import "./App.scss";
 import { NO_OF_BOMBS } from "../../constants";
+import axios from "axios";
 
 const App: React.FC = () => {
   const [cells, setCells] = useState<Cell[][]>(generateCells());
@@ -199,8 +200,28 @@ const App: React.FC = () => {
     );
   };
 
+  const testServer = () => {
+    console.log("test server");
+    axios
+      .get("/api")
+      .then((response) => {
+        const data = response.data;
+        // this.setState({ posts: data });
+        console.log(data);
+        console.log("Data has been received!!");
+      })
+      .catch(() => {
+        alert("Error retrieving data!!!");
+      });
+  };
+
+  useEffect(() => {
+    testServer();
+  }, []);
+
   return (
     <div className="App">
+      {"13:18"}
       <div className="Header">
         <NumberDisplay value={bombCounter} />
         <div className="Face">
