@@ -10,13 +10,14 @@ const PORT = process.env.PORT || 8080; // Step 1
 const routes = require("./routes/api");
 
 // Step 2
-mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost/mern_youtube",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+// let newUrl =
+//   "mongodb+srv://ramsess90:Abc123456@cluster0.ewmw7.mongodb.net/db1?retryWrites=true&w=majority";
+let oldUrl = "mongodb://localhost/mern_youtube";
+
+mongoose.connect(process.env.MONGODB_URI || oldUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 mongoose.connection.on("connected", () => {
   console.log("Mongoose is connected!!!!");
