@@ -27,12 +27,12 @@ class App extends React.Component {
       });
   };
 
-  handleChange = ({ target }) => {
+  handleChange = ({ target }: { target: any }) => {
     const { name, value } = target;
     this.setState({ [name]: value });
   };
 
-  submit = (event) => {
+  submit = (event: any) => {
     event.preventDefault();
 
     const payload = {
@@ -62,10 +62,10 @@ class App extends React.Component {
     });
   };
 
-  displayBlogPost = (posts) => {
+  displayBlogPost = (posts: any) => {
     if (!posts.length) return null;
 
-    return posts.map((post, index) => (
+    return posts.map((post: any, index: any) => (
       <div key={index} className="blog-post__display">
         <h3>{post.title}</h3>
         <p>{post.body}</p>
