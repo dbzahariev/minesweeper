@@ -215,6 +215,26 @@ const App: React.FC = () => {
       });
   };
 
+  const submit = () => {
+    const payload = {
+      title: "hi",
+      body: "body 3",
+    };
+
+    axios({
+      url: "/api/save",
+      method: "POST",
+      data: payload,
+    })
+      .then(() => {
+        console.log("Data has been sent to the server");
+        testServer();
+      })
+      .catch(() => {
+        console.log("Internal server error");
+      });
+  };
+
   useEffect(() => {
     testServer();
   }, []);
@@ -222,6 +242,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       {"22:06"}
+      <button onClick={submit}>t submit</button>
       <div className="Header">
         <NumberDisplay value={bombCounter} />
         <div className="Face">
