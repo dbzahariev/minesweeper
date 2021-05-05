@@ -75,23 +75,73 @@ const App: React.FC = () => {
     rowParam: number,
     colParam: number
   ) => (): void => {
-    let newCells: Cell[][] = cells.slice();
-    const currentCell = newCells[rowParam][colParam];
-    if (
-      currentCell.value !== CellValue.bomb &&
-      currentCell.value !== CellValue.none
-    ) {
-      if (live) {
-        handleCellClick(rowParam - 1, colParam)();
-        handleCellClick(rowParam - 1, colParam - 1)();
-        handleCellClick(rowParam - 1, colParam + 1)();
-        handleCellClick(rowParam, colParam - 1)();
-        handleCellClick(rowParam, colParam + 1)();
-        handleCellClick(rowParam + 1, colParam)();
-        handleCellClick(rowParam + 1, colParam - 1)();
-        handleCellClick(rowParam + 1, colParam + 1)();
-      }
-    }
+    // let newCells: Cell[][] = cells.slice();
+    // const currentCell = newCells[rowParam][colParam];
+    // if (
+    //   currentCell.value !== CellValue.bomb &&
+    //   currentCell.value !== CellValue.none
+    // ) {
+    //   if (live) {
+    //     handleCellClick(rowParam - 1, colParam)();
+    //     handleCellClick(rowParam - 1, colParam - 1)();
+    //     handleCellClick(rowParam - 1, colParam + 1)();
+    //     handleCellClick(rowParam, colParam - 1)();
+    //     handleCellClick(rowParam, colParam + 1)();
+    //     handleCellClick(rowParam + 1, colParam)();
+    //     handleCellClick(rowParam + 1, colParam - 1)();
+    //     handleCellClick(rowParam + 1, colParam + 1)();
+    //   }
+    // }
+  };
+
+  const checkBombsAroundMe = (row: number, col: number): boolean => {
+    const checkFlagAroundMe = (row: number, col: number): number => {
+      const check = (row: number, col: number, test?: boolean): string => {
+        const checkAllow = (row: number, col: number): boolean => {
+          let res = true;
+          if (row < 0 || col < 0) {
+            res = false;
+          }
+          if (row >= MAX_ROWS || col >= MAX_COLS) {
+            res = false;
+          }
+          return res;
+        };
+        let res: string = "";
+        if (test) {
+          console.log({ row, col });
+        }
+        if (checkAllow(row, col)) {
+          if (cells[row][col].state === CellState.flagged) {
+            res = "flag";
+          }
+          if (cells[row][col].value === CellValue.bomb) {
+            res = "bomb";
+          }
+        }
+        return res;
+      };
+
+      let nFlags = 0;
+
+      if (check(row - 1, col - 1) === "flag") nFlags++;
+      if (check(row - 1, col) === "flag") nFlags++;
+      if (check(row - 1, col + 1) === "flag") nFlags++;
+
+      if (check(row, col - 1) === "flag") nFlags++;
+      if (check(row, col + 1) === "flag") nFlags++;
+
+      if (check(row + 1, col - 1) === "flag") nFlags++;
+      if (check(row + 1, col, true) === "flag") nFlags++;
+      if (check(row + 1, col + 1) === "flag") nFlags++;
+
+      return nFlags;
+    };
+
+    let res = false;
+    let nFlags = checkFlagAroundMe(row, col);
+    console.log("hi bombs", { nFlags, row, col });
+    return res;
   };
 
   const handleCellClick = (rowParam: number, colParam: number) => (): void => {
@@ -104,6 +154,9 @@ const App: React.FC = () => {
       return;
     }
 
+    if (checkBombsAroundMe(rowParam, colParam)) {
+      return;
+    }
     let newCells: Cell[][] = cells.slice();
 
     if (!live) {
@@ -204,33 +257,11 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    if (getSafeOpenCellsExist(cells) && bombCounter == 0) {
+    if (getSafeOpenCellsExist(cells) && bombCounter === 0) {
       setHesWon(true);
     }
+    // eslint-disable-next-line
   }, [bombCounter]);
-
-  const checkWin = (): boolean => {
-    let nBombs = 0;
-    let nFlag = 0;
-
-    cells.forEach((rows) =>
-      rows.forEach((currentCell) => {
-        if (currentCell.value === CellValue.bomb) {
-          nBombs++;
-        }
-        if (currentCell.state === CellState.flagged) {
-          nFlag++;
-        }
-        // if (
-        //   currentCell.value !== CellValue.bomb &&
-        //   currentCell.state === CellState.open
-        // ) {
-        //   numberOfOpenCells++;
-        // }
-      })
-    );
-    return false;
-  };
 
   const renderCells = (): React.ReactNode => {
     return cells.map((row, rowIndex) =>
@@ -283,7 +314,6 @@ const App: React.FC = () => {
       .get("/api")
       .then((response) => {
         const data = response.data;
-        // this.setState({ posts: data });
         data.forEach((data: any) => {
           // eslint-disable-next-line
           let { owner, games } = data;
@@ -292,10 +322,11 @@ const App: React.FC = () => {
         console.log("Data has been received!!");
       })
       .catch(() => {
-        alert("Error retrieving data!!!");
+        // alert("Error retrieving data!!!");
       });
   };
 
+  // eslint-disable-next-line
   const submit = () => {
     const oneGame = {
       time: 10,
@@ -323,7 +354,6 @@ const App: React.FC = () => {
       })
       .catch((err) => {
         console.error(err);
-        // console.log("Internal server error");
       });
   };
 
