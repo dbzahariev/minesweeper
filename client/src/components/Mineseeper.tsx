@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Cell, CellState, CellValue, Face } from "../../types";
-import { generateCells, openMultipleCells } from "../../utils";
-import NumberDisplay from "../NumberDisplay";
-import Button from "../Button";
-import "./App.scss";
-import { NO_OF_BOMBS } from "../../constants";
+import { Cell, CellState, CellValue, Face } from "../types";
+import { generateCells, openMultipleCells } from "../utils";
+import NumberDisplay from "./NumberDisplay";
+import Button from "./Button";
+import "../styles/App.scss";
+import { MAX_COLS, MAX_ROWS, NO_OF_BOMBS } from "../constants";
 import axios from "axios";
 
 const App: React.FC = () => {
@@ -55,11 +55,13 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (hesLost) {
+      setCells(showAllBombs());
       setLive(false);
       setFace(Face.lost);
     } else {
       setFace(Face.smile);
     }
+    // eslint-disable-next-line
   }, [hesLost]);
 
   useEffect(() => {
@@ -69,17 +71,53 @@ const App: React.FC = () => {
     }
   }, [hesWon]);
 
+  const handleDoubleClick = (
+    rowParam: number,
+    colParam: number
+  ) => (): void => {
+    let newCells: Cell[][] = cells.slice();
+    const currentCell = newCells[rowParam][colParam];
+    if (
+      currentCell.value !== CellValue.bomb &&
+      currentCell.value !== CellValue.none
+    ) {
+      if (live) {
+        handleCellClick(rowParam - 1, colParam)();
+        handleCellClick(rowParam - 1, colParam - 1)();
+        handleCellClick(rowParam - 1, colParam + 1)();
+        handleCellClick(rowParam, colParam - 1)();
+        handleCellClick(rowParam, colParam + 1)();
+        handleCellClick(rowParam + 1, colParam)();
+        handleCellClick(rowParam + 1, colParam - 1)();
+        handleCellClick(rowParam + 1, colParam + 1)();
+      }
+    }
+  };
+
   const handleCellClick = (rowParam: number, colParam: number) => (): void => {
+    if (
+      rowParam < 0 ||
+      colParam >= MAX_COLS ||
+      colParam < 0 ||
+      rowParam >= MAX_ROWS
+    ) {
+      return;
+    }
+
     let newCells: Cell[][] = cells.slice();
 
     if (!live) {
-      let isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
-      while (isBomb) {
-        newCells = generateCells();
-        isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
-      }
+      // let isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
+      // if (isBomb) {
+      //   newCells = gg(rowParam, colParam).slice();
+      // }
+      // while (isBomb) {
+      //   newCells = generateCells();
+      //   isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
+      // }
       setLive(true);
     }
+
     const currentCell = newCells[rowParam][colParam];
 
     if ([CellState.flagged, CellState.visible].includes(currentCell.state)) {
@@ -88,8 +126,10 @@ const App: React.FC = () => {
 
     if (currentCell.value === CellValue.bomb) {
       setHesLost(true);
-      newCells = showAllBombs();
       newCells[rowParam][colParam].red = true;
+      newCells[rowParam][colParam].state = CellState.visible;
+      newCells = showAllBombs();
+
       setCells(newCells);
       return;
     } else if (currentCell.value === CellValue.none) {
@@ -110,7 +150,10 @@ const App: React.FC = () => {
           return cell;
         })
       );
-      setHesWon(true);
+    }
+
+    if (currentCell.state !== CellState.visible) {
+      currentCell.state = CellState.visible;
     }
 
     setCells(newCells);
@@ -143,6 +186,7 @@ const App: React.FC = () => {
 
     const currentCells = cells.slice();
     const currentCell = cells[rowParam][colParam];
+
     if (currentCell.state === CellState.visible) {
       return;
     } else if (currentCell.state === CellState.open && bombCounter > -99) {
@@ -154,6 +198,38 @@ const App: React.FC = () => {
       setCells(currentCells);
       setBombCounter(bombCounter + 1);
     }
+    // if (checkWin) {
+    //   setHesWon(true);
+    // }
+  };
+
+  useEffect(() => {
+    if (getSafeOpenCellsExist(cells) && bombCounter == 0) {
+      setHesWon(true);
+    }
+  }, [bombCounter]);
+
+  const checkWin = (): boolean => {
+    let nBombs = 0;
+    let nFlag = 0;
+
+    cells.forEach((rows) =>
+      rows.forEach((currentCell) => {
+        if (currentCell.value === CellValue.bomb) {
+          nBombs++;
+        }
+        if (currentCell.state === CellState.flagged) {
+          nFlag++;
+        }
+        // if (
+        //   currentCell.value !== CellValue.bomb &&
+        //   currentCell.state === CellState.open
+        // ) {
+        //   numberOfOpenCells++;
+        // }
+      })
+    );
+    return false;
   };
 
   const renderCells = (): React.ReactNode => {
@@ -168,6 +244,7 @@ const App: React.FC = () => {
             value={cell.value}
             red={cell.red}
             onClick={handleCellClick}
+            onDoubleClick={handleDoubleClick}
             onContext={handleCellRightClick}
             row={rowIndex}
             col={cellIndex}
@@ -185,6 +262,7 @@ const App: React.FC = () => {
     setHesLost(false);
     setHesWon(false);
     setFace(Face.smile);
+    console.clear();
   };
 
   const showAllBombs = (): Cell[][] => {
@@ -201,16 +279,14 @@ const App: React.FC = () => {
   };
 
   const testServer = () => {
-    console.log("test server");
     axios
       .get("/api")
       .then((response) => {
         const data = response.data;
         // this.setState({ posts: data });
         data.forEach((data: any) => {
+          // eslint-disable-next-line
           let { owner, games } = data;
-
-          console.log(`owner: ${owner} games: `, games);
         });
 
         console.log("Data has been received!!");
@@ -257,8 +333,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      {"24:00"}
-      <button onClick={submit}>create games</button>
+      {/* <button onClick={submit}>create games</button> */}
       <div className="Header">
         <NumberDisplay value={bombCounter} />
         <div className="Face">

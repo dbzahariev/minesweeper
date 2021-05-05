@@ -1,6 +1,7 @@
-@import "../../styles/index.scss";
+@import "./index.scss";
 
 .Button {
+  background-color: transparent;
   @include borders;
 
   &.live {

@@ -1,6 +1,6 @@
 import React from "react";
-import { CellState, CellValue } from "../../types";
-import "./Button.scss";
+import { CellState, CellValue } from "../types";
+import "../styles/Button.scss";
 
 const Button: React.FC<{
   row: number;
@@ -12,7 +12,19 @@ const Button: React.FC<{
   hesDie: boolean;
   onClick(rowParam: number, colParam: number): (...args: any[]) => void;
   onContext(rowParam: number, colParam: number): (...args: any[]) => void;
-}> = ({ state, value, row, col, onClick, onContext, red, live, hesDie }) => {
+  onDoubleClick(rowParam: number, colParam: number): (...args: any[]) => void;
+}> = ({
+  state,
+  value,
+  row,
+  col,
+  onClick,
+  onContext,
+  red,
+  live,
+  hesDie,
+  onDoubleClick,
+}) => {
   const renderContent = (): React.ReactNode => {
     if (state === CellState.visible) {
       if (value === CellValue.bomb) {
@@ -38,15 +50,17 @@ const Button: React.FC<{
   };
 
   return (
-    <div
+    <button
+      // style={{ backgroundColor: "transparent" }}
       className={`Button ${
         state === CellState.visible ? "visible" : ""
       } value-${value} ${red ? "red" : ""} ${live ? "live" : ""}`}
-      onClick={!hesDie ? onClick(row, col) : () => {}}
       onContextMenu={onContext(row, col)}
+      onDoubleClick={onDoubleClick(row, col)}
+      onClick={!hesDie ? onClick(row, col) : () => {}}
     >
       {renderContent()}
-    </div>
+    </button>
   );
 };
 

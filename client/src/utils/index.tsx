@@ -7,9 +7,18 @@ const generateBombs = (
 ) => {
   let cells = [...cells2];
   let bombPlaced = 0;
+
   while (bombPlaced < numberOfBombs) {
-    const randomRow = Math.floor(Math.random() * MAX_ROWS);
-    const randomCol = Math.floor(Math.random() * MAX_COLS);
+    let randomRow = Math.floor(Math.random() * MAX_ROWS);
+    let randomCol = Math.floor(Math.random() * MAX_ROWS);
+    // let randomRow = genNumber(MAX_ROWS, bomb?.row);
+    // let randomCol = genNumber(MAX_COLS, bomb?.col);
+
+    // if (bomb && (bomb.row === randomRow || bomb.col === randomCol)) {
+    //   console.log("bombeee");
+    //   // randomRow = Math.floor(Math.random() * MAX_ROWS);
+    //   randomCol = Math.floor(Math.random() * MAX_COLS);
+    // }
     const currentCell = cells[randomRow][randomCol];
     if (currentCell.value !== CellValue.bomb) {
       cells = cells.map((row, rowIndex) =>
@@ -77,7 +86,6 @@ const grabAllAbjectnessCells = (
 
 export const generateCells = (): Cell[][] => {
   let cells: Cell[][] = [];
-
   // Generate all Cells
   for (let row = 0; row < MAX_ROWS; row++) {
     cells.push([]);
