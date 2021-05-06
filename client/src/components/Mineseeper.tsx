@@ -7,12 +7,42 @@ import "../styles/App.scss";
 import { MAX_COLS, MAX_ROWS, NO_OF_BOMBS } from "../constants";
 import axios from "axios";
 
+let genCells = () => {
+  // eslint-disable-next-line
+  let cells1 = {
+    str: `${JSON.stringify(generateCells())}`,
+    bombs: 0,
+  };
+  // eslint-disable-next-line
+  let cells2 = {
+    str: `[[{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":9,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0}],[{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":1,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0}],[{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":1,"state":0}],[{"value":1,"state":0},{"value":2,"state":0},{"value":2,"state":0},{"value":2,"state":0},{"value":1,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":9,"state":0}],[{"value":2,"state":0},{"value":9,"state":0},{"value":9,"state":0},{"value":2,"state":0},{"value":9,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":1,"state":0}],[{"value":9,"state":0},{"value":3,"state":0},{"value":2,"state":0},{"value":2,"state":0},{"value":1,"state":0},{"value":2,"state":0},{"value":1,"state":0},{"value":1,"state":0},{"value":0,"state":0}],[{"value":1,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":9,"state":0},{"value":2,"state":0},{"value":1,"state":0}],[{"value":1,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":2,"state":0},{"value":3,"state":0},{"value":9,"state":0}],[{"value":9,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":9,"state":0},{"value":2,"state":0}]]`,
+    bombs: 9,
+  };
+  // eslint-disable-next-line
+  let cells3 = {
+    str: `[[{"value":0,"state":0},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":2},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1}],[{"value":1,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":2}],[{"value":2,"state":0},{"value":9,"state":0},{"value":9,"state":0},{"value":2,"state":0},{"value":9,"state":0},{"value":1,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1}],[{"value":9,"state":0},{"value":3,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1}],[{"value":1,"state":0},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":0},{"value":2,"state":1},{"value":1,"state":1}],[{"value":1,"state":0},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":3,"state":0},{"value":9,"state":2}],[{"value":9,"state":0},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":0},{"value":2,"state":0}]]`,
+    bombs: 9,
+  };
+  // eslint-disable-next-line
+  let cells4 = {
+    str: `[[{"value":0,"state":0},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":2},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1}],[{"value":1,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":2}],[{"value":2,"state":1},{"value":9,"state":2},{"value":9,"state":2},{"value":2,"state":1},{"value":9,"state":2},{"value":1,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1}],[{"value":9,"state":2},{"value":3,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1}],[{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":2},{"value":2,"state":1},{"value":1,"state":1}],[{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":3,"state":1},{"value":9,"state":2}],[{"value":9,"state":2},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":0},{"value":2,"state":0}]]`,
+    bombs: 9,
+  };
+
+  let res = { cells: JSON.parse(cells1.str), bombs: cells1?.bombs || 0 };
+
+  return res;
+};
+
 const App: React.FC = () => {
-  const [cells, setCells] = useState<Cell[][]>(generateCells());
+  // const [cells, setCells] = useState<Cell[][]>(generateCells());
+  const [cells, setCells] = useState<Cell[][]>(genCells().cells);
   const [face, setFace] = useState<Face>(Face.smile);
   const [time, setTime] = useState<number>(0);
   const [live, setLive] = useState<boolean>(false);
-  const [bombCounter, setBombCounter] = useState<number>(NO_OF_BOMBS);
+  const [bombCounter, setBombCounter] = useState<number>(
+    NO_OF_BOMBS - genCells().bombs
+  );
   const [hesLost, setHesLost] = useState<boolean>(false);
   const [hesWon, setHesWon] = useState<boolean>(false);
 
@@ -66,6 +96,22 @@ const App: React.FC = () => {
     );
   }, [cells]);
 
+  const showAllNotBombs = () => {
+    let currentCells = cells.slice();
+
+    return currentCells.map((row) =>
+      row.map((cell) => {
+        if (
+          cell.state !== CellState.visible &&
+          cell.state !== CellState.flagged
+        ) {
+          return { ...cell, state: CellState.visible };
+        }
+        return cell;
+      })
+    );
+  };
+
   useEffect(() => {
     if (hesLost) {
       let bombs = showAllBombs();
@@ -74,10 +120,13 @@ const App: React.FC = () => {
       setLive(false);
     }
     if (hesWon) {
+      let bombs = showAllNotBombs();
+      setCells(bombs);
       setFace(Face.won);
       setLive(false);
     }
-  }, [hesLost, hesWon, showAllBombs]);
+    // eslint-disable-next-line
+  }, [hesLost, hesWon]);
 
   const checkBombsAroundMe = (row: number, col: number): boolean => {
     let nFlags = 0;
@@ -212,6 +261,7 @@ const App: React.FC = () => {
       }
     }
 
+    // eslint-disable-next-line
     let nBingo = 0;
 
     let distinct: any[] = [];
@@ -231,7 +281,6 @@ const App: React.FC = () => {
         cells[row][col].value !== CellValue.none &&
         cells[row][col].value === nFBombs
       ) {
-        // console.log("bingo1", row, col);
         nBingo++;
       }
       if (
@@ -242,7 +291,6 @@ const App: React.FC = () => {
         cells[row][col].value !== CellValue.none &&
         cells[row][col].value === nFBombs
       ) {
-        // console.log("bingo2", row, col);
         nBingo++;
       }
       if (
@@ -253,7 +301,6 @@ const App: React.FC = () => {
         cells[row][col].value !== CellValue.none &&
         cells[row][col].value === nFBombs
       ) {
-        // console.log("bingo3", row, col);
         nBingo++;
       }
       if (
@@ -264,7 +311,6 @@ const App: React.FC = () => {
         cells[row][col].value !== CellValue.none &&
         cells[row][col].value === nFBombs
       ) {
-        // console.log("bingo4", row, col);
         nBingo++;
       }
       if (
@@ -275,7 +321,6 @@ const App: React.FC = () => {
         cells[row][col].value !== CellValue.none &&
         cells[row][col].value === nFBombs
       ) {
-        // console.log("bingo5", row, col);
         nBingo++;
       }
       if (
@@ -286,7 +331,6 @@ const App: React.FC = () => {
         cells[row][col].value !== CellValue.none &&
         cells[row][col].value === nFBombs
       ) {
-        // console.log("bingo6", row, col);
         nBingo++;
       }
       if (
@@ -297,7 +341,6 @@ const App: React.FC = () => {
         cells[row][col].value !== CellValue.none &&
         cells[row][col].value === nFBombs
       ) {
-        // console.log("bingo7", row, col);
         nBingo++;
       }
       if (
@@ -308,36 +351,35 @@ const App: React.FC = () => {
         cells[row][col].value !== CellValue.none &&
         cells[row][col].value === nFBombs
       ) {
-        // console.log("bingo8", row, col);
         nBingo++;
       }
     });
 
-    let res = nBingo > 0 && nBingo === nFlags;
+    let res = nFlags === cells[row][col].value;
 
     return res;
   };
 
-  const setVisibleAroundMe3 = (row: number, col: number): Cell[][] => {
+  const setVisibleAroundMe = (row: number, col: number): Cell[][] => {
     let res = cells.slice();
     if (checkBombsAroundMe(row, col)) {
       if (
-        row - 1 > 0 &&
-        col - 1 > 0 &&
+        row - 1 >= 0 &&
+        col - 1 >= 0 &&
         res[row - 1][col - 1].state !== CellState.visible &&
         res[row - 1][col - 1].state !== CellState.flagged
       ) {
         handleCellClick(row - 1, col - 1, true)();
       }
       if (
-        row - 1 > 0 &&
+        row - 1 >= 0 &&
         res[row - 1][col].state !== CellState.visible &&
         res[row - 1][col].state !== CellState.flagged
       ) {
         handleCellClick(row - 1, col, true)();
       }
       if (
-        row - 1 > 0 &&
+        row - 1 >= 0 &&
         col + 1 < MAX_COLS &&
         res[row - 1][col + 1].state !== CellState.visible &&
         res[row - 1][col + 1].state !== CellState.flagged
@@ -345,7 +387,7 @@ const App: React.FC = () => {
         handleCellClick(row - 1, col + 1, true)();
       }
       if (
-        col - 1 > 0 &&
+        col - 1 >= 0 &&
         res[row][col - 1].state !== CellState.visible &&
         res[row][col - 1].state !== CellState.flagged
       ) {
@@ -360,7 +402,7 @@ const App: React.FC = () => {
       }
       if (
         row + 1 < MAX_ROWS &&
-        col - 1 > 0 &&
+        col - 1 >= 0 &&
         res[row + 1][col - 1].state !== CellState.visible &&
         res[row + 1][col - 1].state !== CellState.flagged
       ) {
@@ -413,7 +455,7 @@ const App: React.FC = () => {
     }
 
     if (fromReval !== true) {
-      newCells = setVisibleAroundMe3(rowParam, colParam);
+      newCells = setVisibleAroundMe(rowParam, colParam);
     }
 
     const currentCell = newCells[rowParam][colParam];
@@ -432,29 +474,17 @@ const App: React.FC = () => {
       // Click on a number
       newCells[rowParam][colParam].state = CellState.visible;
     }
-
-    // Check Won
-    // let safeOpenCellsExist: boolean = getSafeOpenCellsExist(cells);
-    // if (!safeOpenCellsExist) {
-    //   newCells.map((row) =>
-    //     row.map((cell) => {
-    //       if (cell.value === CellValue.bomb) {
-    //         return { ...cell, state: CellState.flagged };
-    //       }
-    //       return cell;
-    //     })
-    //   );
-    // }
-
-    // if (currentCell.state !== CellState.visible) {
-    //   currentCell.state = CellState.visible;
-    // }
+    if (checkWin()) {
+      setHesWon(true);
+    }
 
     setCells(newCells);
   };
 
-  const getSafeOpenCellsExist = (cells: Cell[][]) => {
+  const getSafeOpenCellsExist = () => {
     let numberOfOpenCells = 0;
+    let existNotOpenBombs = 0;
+
     cells.forEach((rows) =>
       rows.forEach((currentCell) => {
         if (
@@ -463,10 +493,28 @@ const App: React.FC = () => {
         ) {
           numberOfOpenCells++;
         }
+        if (
+          currentCell.value === CellValue.bomb &&
+          currentCell.state !== CellState.open &&
+          currentCell.state !== CellState.flagged
+        ) {
+          existNotOpenBombs++;
+        }
       })
     );
 
-    return numberOfOpenCells > 0;
+    return { numberOfOpenCells, existNotOpenBombs };
+  };
+
+  const checkWin = (): boolean => {
+    let res = false;
+    if (getSafeOpenCellsExist().numberOfOpenCells === 0) {
+      res = true;
+    }
+    if (getSafeOpenCellsExist().existNotOpenBombs === bombCounter) {
+      res = true;
+    }
+    return res;
   };
 
   const handleCellRightClick = (rowParam: number, colParam: number) => (
@@ -492,15 +540,17 @@ const App: React.FC = () => {
       setCells(currentCells);
       setBombCounter(bombCounter + 1);
     }
-    // if (checkWin) {
-    //   setHesWon(true);
-    // }
+
+    if (checkWin()) {
+      setHesWon(true);
+    }
   };
 
   useEffect(() => {
-    if (getSafeOpenCellsExist(cells) && bombCounter === 0) {
+    if (getSafeOpenCellsExist().numberOfOpenCells > 0 && bombCounter === 0) {
       setHesWon(true);
     }
+    // eslint-disable-next-line
   }, [bombCounter, cells]);
 
   const renderCells = (): React.ReactNode => {
@@ -571,11 +621,10 @@ const App: React.FC = () => {
       data: payload,
     })
       .then(() => {
-        console.log("Data has been sent to the server");
         testServer();
       })
       .catch((err) => {
-        console.error(err);
+        alert(`Error ${err}`);
       });
   };
 
