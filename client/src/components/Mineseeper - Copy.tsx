@@ -10,10 +10,8 @@ import axios from "axios";
 let genCells = () => {
   // eslint-disable-next-line
   let cells1 = {
-    cells: generateCells(),
-    bombCounter: 10,
-    live: false,
-    time: 0,
+    str: `${JSON.stringify(generateCells())}`,
+    bombs: 0,
   };
   // eslint-disable-next-line
   let cells2 = {
@@ -31,25 +29,7 @@ let genCells = () => {
     bombs: 9,
   };
 
-  // eslint-disable-next-line
-  let cells5: {
-    time: number;
-    live: boolean;
-    cells: Cell[][];
-    bombCounter: number;
-  } = JSON.parse(
-    `{"time":54,"live":true,"bombCounter":1,"cells":[[{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":1,"state":1},{"value":9,"state":2},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":1,"state":1}],[{"value":1,"state":1},{"value":1,"state":0},{"value":2,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":9,"state":2},{"value":2,"state":1},{"value":9,"state":2}],[{"value":2,"state":1},{"value":9,"state":0},{"value":2,"state":1},{"value":9,"state":2},{"value":9,"state":2},{"value":2,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":1,"state":1}],[{"value":9,"state":2},{"value":2,"state":1},{"value":3,"state":1},{"value":3,"state":1},{"value":3,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1}],[{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":9,"state":2},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":9,"state":2}],[{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":9,"state":2},{"value":2,"state":1},{"value":1,"state":1}],[{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1}]]}`
-  );
-
-  let { time, live, cells, bombCounter } = cells1;
-  // let { time, live, cells, bombCounter } = cells5;
-
-  let res = {
-    cells: cells,
-    time,
-    live,
-    bombCounter,
-  };
+  let res = { cells: JSON.parse(cells4.str), bombs: cells4?.bombs || 0 };
 
   return res;
 };
@@ -58,19 +38,13 @@ const App: React.FC = () => {
   // const [cells, setCells] = useState<Cell[][]>(generateCells());
   const [cells, setCells] = useState<Cell[][]>(genCells().cells);
   const [face, setFace] = useState<Face>(Face.smile);
-  const [time, setTime] = useState<number>(genCells().time);
-  const [live, setLive] = useState<boolean>(genCells().live);
+  const [time, setTime] = useState<number>(0);
+  const [live, setLive] = useState<boolean>(false);
   const [bombCounter, setBombCounter] = useState<number>(
-    genCells().bombCounter
+    NO_OF_BOMBS - genCells().bombs
   );
   const [hesLost, setHesLost] = useState<boolean>(false);
   const [hesWon, setHesWon] = useState<boolean>(false);
-
-  useEffect(() => {
-    // console.clear();
-    // console.log(JSON.stringify({ time, live, bombCounter, cells }));
-    // eslint-disable-next-lin
-  }, [cells, bombCounter, live]);
 
   useEffect(() => {
     const handleMouseDownAndUp = (e: any): void => {
@@ -114,7 +88,7 @@ const App: React.FC = () => {
 
     return currentCells.map((row) =>
       row.map((cell) => {
-        if (cell.value === CellValue.bomb && cell.state !== CellState.flagged) {
+        if (cell.value === CellValue.bomb) {
           return { ...cell, state: CellState.visible };
         }
         return cell;
@@ -503,6 +477,9 @@ const App: React.FC = () => {
     if (checkWin()) {
       setHesWon(true);
     }
+    if (checkLost()) {
+      setHesLost(true);
+    }
 
     setCells(newCells);
   };
@@ -510,7 +487,8 @@ const App: React.FC = () => {
   const getSafeOpenCellsExist = () => {
     let numberOfOpenCells = 0;
     let existNotOpenBombs = 0;
-    let wrongBombs = 0;
+    let bombWithFlag = 0;
+    let flags = 0;
 
     cells.forEach((rows) =>
       rows.forEach((currentCell) => {
@@ -528,26 +506,39 @@ const App: React.FC = () => {
           existNotOpenBombs++;
         }
         if (
-          currentCell.value !== CellValue.bomb &&
+          currentCell.value === CellValue.bomb &&
           currentCell.state === CellState.flagged
         ) {
-          wrongBombs++;
+          bombWithFlag++;
+        }
+        if (currentCell.state === CellState.flagged) {
+          flags++;
         }
       })
     );
 
-    return { numberOfOpenCells, existNotOpenBombs, wrongBombs };
+    return { numberOfOpenCells, existNotOpenBombs, bombWithFlag, flags };
   };
 
   const checkWin = (): boolean => {
     let res = false;
-    // console.log(getSafeOpenCellsExist());
+
     if (getSafeOpenCellsExist().numberOfOpenCells === 0) {
-      res = true;
+      // res = true;
     }
-    if (getSafeOpenCellsExist().wrongBombs > 0) {
-      res = false;
-    }
+
+    return res;
+  };
+
+  const checkLost = (): boolean => {
+    let res = false;
+
+    // if (getSafeOpenCellsExist().numberOfOpenCells === 0) {
+    //   res = true;
+    // }
+    // if (getSafeOpenCellsExist().bombWithFlag === NO_OF_BOMBS) {
+    //   res = true;
+    // }
     return res;
   };
 
@@ -563,29 +554,43 @@ const App: React.FC = () => {
     const currentCells = cells.slice();
     const currentCell = cells[rowParam][colParam];
 
-    if (currentCell.state !== CellState.visible) {
-      if (currentCells[rowParam][colParam].state !== CellState.flagged) {
-        currentCells[rowParam][colParam].state = CellState.flagged;
-        setCells(currentCells);
-        setBombCounter(bombCounter - 1);
-      } else {
-        currentCells[rowParam][colParam].state = CellState.open;
-        setCells(currentCells);
-        setBombCounter(bombCounter + 1);
-      }
+    if (currentCell.state === CellState.visible) {
+      console.log("rcl1");
+      return;
+    } else if (currentCell.state === CellState.open && bombCounter > -99) {
+      currentCells[rowParam][colParam].state = CellState.flagged;
+      console.log("rcl2", currentCells[rowParam][colParam]);
+      setCells(currentCells);
+      setBombCounter(bombCounter - 1);
+    } else if (currentCell.state === CellState.flagged) {
+      console.log("rcl3");
+      currentCells[rowParam][colParam].state = CellState.open;
+      setCells(currentCells);
+      setBombCounter(bombCounter + 1);
+    } else {
+      console.log("rcl4");
     }
 
     if (checkWin()) {
       setHesWon(true);
     }
+    if (checkLost()) {
+      setHesLost(true);
+    }
   };
 
   useEffect(() => {
-    if (getSafeOpenCellsExist().numberOfOpenCells > 0 && bombCounter === 0) {
+    // if (getSafeOpenCellsExist().numberOfOpenCells > 0 && bombCounter === 0) {
+    // setHesWon(true);
+    // }
+    if (checkWin()) {
       setHesWon(true);
     }
+    if (checkLost()) {
+      setHesLost(true);
+    }
     // eslint-disable-next-line
-  }, [bombCounter, cells]);
+  }, [bombCounter]);
 
   const renderCells = (): React.ReactNode => {
     return cells.map((row, rowIndex) =>

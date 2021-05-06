@@ -1,5 +1,29 @@
 @import "./index.scss";
 
+.bomb {
+  background-image: url("https://minesweeperonline.com/sprite100.gif");
+  background-position: -116px -72px;
+  background-size: 260px;
+}
+
+.bomb-red {
+  background-image: url("https://minesweeperonline.com/sprite100.gif");
+  background-position: -59px -72px;
+  background-size: 260px;
+}
+
+.wrong-bomb {
+  background-image: url("https://minesweeperonline.com/sprite100.gif");
+  background-position: -90px -75px;
+  background-size: 260px;
+}
+
+.flag {
+  background-image: url("https://minesweeperonline.com/sprite100.gif");
+  background-position: -31px -73px;
+  background-size: 260px;
+}
+
 .Button {
   background-color: transparent;
   @include borders;
@@ -25,7 +49,9 @@
   }
 
   &.red {
-    background: #ff0000;
+    background-image: url("https://minesweeperonline.com/sprite100.gif");
+    background-position: -59px -72px;
+    background-size: 260px;
   }
 
   &.value-1 {
