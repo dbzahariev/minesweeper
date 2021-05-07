@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 // Schema
 const Schema = mongoose.Schema;
 const GamesSchema = new Schema({
-  owner: String,
-  games: Array,
+  owner: { type: String, require: true },
+  games: { type: Array, require: true },
   date: {
     type: String,
     default: Date.now(),
