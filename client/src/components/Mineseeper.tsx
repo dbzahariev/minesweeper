@@ -11,7 +11,7 @@ let genCells = () => {
   // eslint-disable-next-line
   let cells1 = {
     cells: generateCells(),
-    bombCounter: 10,
+    bombCounter: NO_OF_BOMBS,
     live: false,
     time: 0,
   };

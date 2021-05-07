@@ -11,14 +11,6 @@ const generateBombs = (
   while (bombPlaced < numberOfBombs) {
     let randomRow = Math.floor(Math.random() * MAX_ROWS);
     let randomCol = Math.floor(Math.random() * MAX_ROWS);
-    // let randomRow = genNumber(MAX_ROWS, bomb?.row);
-    // let randomCol = genNumber(MAX_COLS, bomb?.col);
-
-    // if (bomb && (bomb.row === randomRow || bomb.col === randomCol)) {
-    //   console.log("bombeee");
-    //   // randomRow = Math.floor(Math.random() * MAX_ROWS);
-    //   randomCol = Math.floor(Math.random() * MAX_COLS);
-    // }
     const currentCell = cells[randomRow][randomCol];
     if (currentCell.value !== CellValue.bomb) {
       cells = cells.map((row, rowIndex) =>
