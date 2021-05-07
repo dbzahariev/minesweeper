@@ -1,21 +1,24 @@
 {
   "files": {
-    "main.css": "/minesweeper/static/css/main.0380ca51.chunk.css",
-    "main.js": "/minesweeper/static/js/main.03ef53ed.chunk.js",
-    "main.js.map": "/minesweeper/static/js/main.03ef53ed.chunk.js.map",
+    "main.css": "/minesweeper/static/css/main.2b0424fb.chunk.css",
+    "main.js": "/minesweeper/static/js/main.46485734.chunk.js",
+    "main.js.map": "/minesweeper/static/js/main.46485734.chunk.js.map",
     "runtime-main.js": "/minesweeper/static/js/runtime-main.82c4d401.js",
     "runtime-main.js.map": "/minesweeper/static/js/runtime-main.82c4d401.js.map",
-    "static/js/2.ed206068.chunk.js": "/minesweeper/static/js/2.ed206068.chunk.js",
-    "static/js/2.ed206068.chunk.js.map": "/minesweeper/static/js/2.ed206068.chunk.js.map",
+    "static/css/2.0b5d44dd.chunk.css": "/minesweeper/static/css/2.0b5d44dd.chunk.css",
+    "static/js/2.446d78a9.chunk.js": "/minesweeper/static/js/2.446d78a9.chunk.js",
+    "static/js/2.446d78a9.chunk.js.map": "/minesweeper/static/js/2.446d78a9.chunk.js.map",
     "index.html": "/minesweeper/index.html",
-    "precache-manifest.59ba19b3c02ae436b0bb2f93e8d6bad2.js": "/minesweeper/precache-manifest.59ba19b3c02ae436b0bb2f93e8d6bad2.js",
+    "precache-manifest.4cfdb22c0a581a9ff9d7db3fe5954a18.js": "/minesweeper/precache-manifest.4cfdb22c0a581a9ff9d7db3fe5954a18.js",
     "service-worker.js": "/minesweeper/service-worker.js",
-    "static/css/main.0380ca51.chunk.css.map": "/minesweeper/static/css/main.0380ca51.chunk.css.map"
+    "static/css/2.0b5d44dd.chunk.css.map": "/minesweeper/static/css/2.0b5d44dd.chunk.css.map",
+    "static/css/main.2b0424fb.chunk.css.map": "/minesweeper/static/css/main.2b0424fb.chunk.css.map"
   },
   "entrypoints": [
     "static/js/runtime-main.82c4d401.js",
-    "static/js/2.ed206068.chunk.js",
-    "static/css/main.0380ca51.chunk.css",
-    "static/js/main.03ef53ed.chunk.js"
+    "static/css/2.0b5d44dd.chunk.css",
+    "static/js/2.446d78a9.chunk.js",
+    "static/css/main.2b0424fb.chunk.css",
+    "static/js/main.46485734.chunk.js"
   ]
 }
