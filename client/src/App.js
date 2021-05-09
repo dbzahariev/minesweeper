@@ -3,6 +3,8 @@ import axios from "axios";
 
 import "./App.css";
 
+import AppDev from "./components/App";
+
 class App extends React.Component {
   state = {
     title: "",
@@ -106,6 +108,7 @@ class App extends React.Component {
         </form>
 
         <div className="blog-">{this.displayBlogPost(this.state.posts)}</div>
+        <AppDev />
       </div>
     );
   }
