@@ -68,8 +68,6 @@ const Button: React.FC<{
       } value-${value} ${live ? "live" : ""}`}
       onContextMenu={onContext(row, col)}
       onClick={!hesDie ? onClick(row, col) : () => {}}
-      // onClick={foo}
-      // onContextMenu={foo}
     >
       {renderContent()}
     </button>

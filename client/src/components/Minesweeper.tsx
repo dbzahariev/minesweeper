@@ -3,11 +3,8 @@ import { Cell, CellState, CellValue, Face } from "../types";
 import { generateCells, openMultipleCells } from "../utils";
 import NumberDisplay from "./NumberDisplay";
 import Button from "./Button";
-import "../styles/App.scss";
+import "../styles/Minesweeper.scss";
 import { MAX_COLS, MAX_ROWS, NO_OF_BOMBS } from "../constants";
-import axios from "axios";
-import ExportAndImport from "./ExportAndImport";
-import Table2 from "./Table";
 
 let genCells = () => {
   // eslint-disable-next-line
@@ -67,12 +64,6 @@ const App: React.FC = () => {
   );
   const [hesLost, setHesLost] = useState<boolean>(false);
   const [hesWon, setHesWon] = useState<boolean>(false);
-
-  useEffect(() => {
-    // console.clear();
-    // console.log(JSON.stringify({ time, live, bombCounter, cells }));
-    // eslint-disable-next-lin
-  }, [cells, bombCounter, live]);
 
   useEffect(() => {
     const handleMouseDownAndUp = (e: any): void => {
@@ -620,116 +611,32 @@ const App: React.FC = () => {
     setFace(Face.smile);
   };
 
-  const getAllGames = () => {
-    console.log("log game:");
-    axios
-      .get("/api")
-      .then((response) => {
-        const data = response.data;
-        console.log(data);
-        // data.forEach((data: any) => {
-        //   // console.log(data);
-        //   alert(`${data.owner} have ${data.games.length} games!`);
-        // });
-      })
-      .catch(() => {
-        alert("Error retrieving data!!!");
-      });
-  };
-
-  const getGamesById = () => {
-    let ownerId = "609580eb5a5d3a17c8002231";
-    axios
-      .get(`/api?id=${ownerId}`)
-      .then((response) => {
-        const gamesForId = response.data.games;
-        console.log(gamesForId);
-      })
-      .catch(() => {
-        alert("Error retrieving data!!!");
-      });
-  };
-
-  const testServer = () => {
-    axios
-      .get("/api")
-      .then((response) => {
-        const data = response.data;
-        data.forEach((data: any) => {
-          alert(`${data.owner} have ${data.games.length} games!`);
-        });
-      })
-      .catch(() => {
-        alert("Error retrieving data!!!");
-      });
-  };
-
-  // eslint-disable-next-line
-  const submit = () => {
-    const oneGame = {
-      time: 10,
-      date: new Date(),
-    };
-    const twoGame = {
-      time: 20,
-      date: new Date(),
-    };
-    const allGames = [oneGame, twoGame];
-
-    const payload = {
-      owner: "rame",
-      games: allGames,
-    };
-
-    axios({
-      url: "/api/save",
-      method: "POST",
-      data: payload,
-    })
-      .then(() => {
-        testServer();
-      })
-      .catch((err) => {
-        alert(`Error ${err}`);
-      });
-  };
-
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
+        width: `${55 + 30 * MAX_COLS}px`,
+        height: `${145 + 30 * MAX_ROWS}px`,
       }}
+      className="Minesweeper"
     >
+      <div className="Header">
+        <NumberDisplay value={bombCounter} />
+        <div className="Face">
+          <span role="img" aria-label="face" onClick={handleFaceClick}>
+            {face}
+          </span>
+        </div>
+        <NumberDisplay value={time} />
+      </div>
       <div
+        className="Body"
         style={{
-          display: "flex",
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          gridTemplateColumns: `repeat(${MAX_COLS}, 1fr)`,
+          gridTemplateRows: `repeat(${MAX_ROWS}, 1fr)`,
         }}
       >
-        <ExportAndImport />
-        {/* <button onClick={testServer}>ts</button> */}
-        <button onClick={getAllGames}>gag</button>
-        <button onClick={getGamesById}>gag by id</button>
+        {renderCells()}
       </div>
-      <div className="App">
-        <div className="Header">
-          <NumberDisplay value={bombCounter} />
-          <div className="Face">
-            <span role="img" aria-label="face" onClick={handleFaceClick}>
-              {face}
-            </span>
-          </div>
-          <NumberDisplay value={time} />
-        </div>
-        <div className="Body">{renderCells()}</div>
-      </div>
-      <Table2 ownerId={"60957d8a1d870f1c7c1073a0"} />
     </div>
   );
 };

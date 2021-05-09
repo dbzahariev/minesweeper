@@ -10,8 +10,9 @@ const generateBombs = (
 
   while (bombPlaced < numberOfBombs) {
     let randomRow = Math.floor(Math.random() * MAX_ROWS);
-    let randomCol = Math.floor(Math.random() * MAX_ROWS);
+    let randomCol = Math.floor(Math.random() * MAX_COLS);
     const currentCell = cells[randomRow][randomCol];
+
     if (currentCell.value !== CellValue.bomb) {
       cells = cells.map((row, rowIndex) =>
         row.map((cell, colIndex) => {
