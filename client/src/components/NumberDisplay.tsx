@@ -1,13 +1,20 @@
-import React from "react";
 import "../styles/NumberDisplay.scss";
 
-interface NumberDisplayProps {
-  value: number;
-}
-
-const NumberDisplay: React.FC<NumberDisplayProps> = ({ value }) => {
+function NumberDisplay({ value }: { value: number }) {
   return (
-    <div className="NumberDisplay">
+    <div
+      style={{
+        width: "80px",
+        height: "48px",
+        color: "#ff0000",
+        background: "black",
+        textAlign: "center",
+        fontSize: "40px",
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+      }}
+    >
       <span>
         {value < 0
           ? `-${Math.abs(value).toString().padStart(2, "0")}`
@@ -15,6 +22,6 @@ const NumberDisplay: React.FC<NumberDisplayProps> = ({ value }) => {
       </span>
     </div>
   );
-};
+}
 
 export default NumberDisplay;

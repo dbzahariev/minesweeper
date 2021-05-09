@@ -1,5 +1,5 @@
-import { MAX_ROWS, MAX_COLS, NO_OF_BOMBS } from "../constants";
-import { Cell, CellState, CellValue } from "../types";
+import { MAX_ROWS, MAX_COLS, NO_OF_BOMBS } from "./Constants";
+import { Cell, CellState, CellValue } from "./Types";
 
 const generateBombs = (
   cells2: Cell[][],

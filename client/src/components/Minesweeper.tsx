@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Cell, CellState, CellValue, Face } from "../types";
-import { generateCells, openMultipleCells } from "../utils";
+import { Cell, CellState, CellValue, Face } from "../assistants/Types";
+import { generateCells, openMultipleCells } from "../assistants/Utils";
+import { MAX_COLS, MAX_ROWS, NO_OF_BOMBS } from "../assistants/Constants";
 import NumberDisplay from "./NumberDisplay";
 import Button from "./Button";
+
 import "../styles/Minesweeper.scss";
-import { MAX_COLS, MAX_ROWS, NO_OF_BOMBS } from "../constants";
 
 let genCells = () => {
   // eslint-disable-next-line

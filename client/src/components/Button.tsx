@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, { useState, useEffect } from "react";
-import { CellState, CellValue } from "../types";
+import { CellState, CellValue } from "../assistants/Types";
 import "../styles/Button.scss";
 
 function Button({
@@ -8,16 +8,16 @@ function Button({
   value,
   row,
   col,
+  live,
+  red,
+  hesDie,
   onClick,
   onContext,
-  red,
-  live,
-  hesDie,
 }: {
-  row: number;
-  col: number;
   state: CellState;
   value: CellValue;
+  row: number;
+  col: number;
   live: boolean;
   red?: boolean;
   hesDie: boolean;
