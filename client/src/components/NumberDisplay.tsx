@@ -1,5 +1,3 @@
-import "../styles/NumberDisplay.scss";
-
 function NumberDisplay({ value }: { value: number }) {
   return (
     <div

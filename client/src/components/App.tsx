@@ -1,7 +1,6 @@
 import Minesweeper from "./Minesweeper";
 import "../styles/Button.scss";
 import "../styles/Minesweeper.scss";
-import "../styles/NumberDisplay.scss";
 import Table2 from "./Table2";
 import ExportAndImport from "./ExportAndImport";
 import axios from "axios";
