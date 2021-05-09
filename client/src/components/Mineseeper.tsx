@@ -618,22 +618,25 @@ const App: React.FC = () => {
     setFace(Face.smile);
   };
 
+  const testServer = () => {
+    // console.log(process.env);
+    axios
+      // .get("/api")
+      .get("/api")
+      // .get("https://jsonplaceholder.typicode.com/todos")
+      .then((response) => {
+        const data = response.data;
+        data.forEach((data: any) => {
+          alert(`${data.owner} have ${data.games.length} games!`);
+        });
+      })
+      .catch(() => {
+        // alert("Error retrieving data!!!");
+      });
+  };
+
   // eslint-disable-next-line
   const submit = () => {
-    const testServer = () => {
-      axios
-        .get("/api")
-        .then((response) => {
-          const data = response.data;
-          data.forEach((data: any) => {
-            alert(`${data.owner} have ${data.games.length} games!`);
-          });
-        })
-        .catch(() => {
-          // alert("Error retrieving data!!!");
-        });
-    };
-
     const oneGame = {
       time: 10,
       date: new Date(),
@@ -664,8 +667,8 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      {/* <button onClick={submit}>create games</button> */}
-      <div className="Header">
+      <button onClick={testServer}>Test server</button>
+      {/* <div className="Header">
         <NumberDisplay value={bombCounter} />
         <div className="Face">
           <span role="img" aria-label="face" onClick={handleFaceClick}>
@@ -674,7 +677,7 @@ const App: React.FC = () => {
         </div>
         <NumberDisplay value={time} />
       </div>
-      <div className="Body">{renderCells()}</div>
+      <div className="Body">{renderCells()}</div> */}
     </div>
   );
 };

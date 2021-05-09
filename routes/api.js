@@ -7,6 +7,7 @@ const Games = require("../models/games");
 
 // Routes
 router.get("/", (req, res) => {
+  console.log("hi");
   Games.find({})
     .then((data) => {
       console.log("Return data");
