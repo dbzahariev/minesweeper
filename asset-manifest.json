@@ -1,24 +1,21 @@
 {
   "files": {
-    "main.css": "/minesweeper/static/css/main.5e918d3b.chunk.css",
-    "main.js": "/minesweeper/static/js/main.881e1725.chunk.js",
-    "main.js.map": "/minesweeper/static/js/main.881e1725.chunk.js.map",
+    "main.css": "/minesweeper/static/css/main.2988e5dc.chunk.css",
+    "main.js": "/minesweeper/static/js/main.98efc2cd.chunk.js",
+    "main.js.map": "/minesweeper/static/js/main.98efc2cd.chunk.js.map",
     "runtime-main.js": "/minesweeper/static/js/runtime-main.82c4d401.js",
     "runtime-main.js.map": "/minesweeper/static/js/runtime-main.82c4d401.js.map",
-    "static/css/2.0b5d44dd.chunk.css": "/minesweeper/static/css/2.0b5d44dd.chunk.css",
-    "static/js/2.68ddea23.chunk.js": "/minesweeper/static/js/2.68ddea23.chunk.js",
-    "static/js/2.68ddea23.chunk.js.map": "/minesweeper/static/js/2.68ddea23.chunk.js.map",
+    "static/js/2.5a9d0500.chunk.js": "/minesweeper/static/js/2.5a9d0500.chunk.js",
+    "static/js/2.5a9d0500.chunk.js.map": "/minesweeper/static/js/2.5a9d0500.chunk.js.map",
     "index.html": "/minesweeper/index.html",
-    "precache-manifest.c47eb9490a1315dfa8ae746a0b866b57.js": "/minesweeper/precache-manifest.c47eb9490a1315dfa8ae746a0b866b57.js",
+    "precache-manifest.a7abed32095d5200b9ef7ef2d44962bd.js": "/minesweeper/precache-manifest.a7abed32095d5200b9ef7ef2d44962bd.js",
     "service-worker.js": "/minesweeper/service-worker.js",
-    "static/css/2.0b5d44dd.chunk.css.map": "/minesweeper/static/css/2.0b5d44dd.chunk.css.map",
-    "static/css/main.5e918d3b.chunk.css.map": "/minesweeper/static/css/main.5e918d3b.chunk.css.map"
+    "static/css/main.2988e5dc.chunk.css.map": "/minesweeper/static/css/main.2988e5dc.chunk.css.map"
   },
   "entrypoints": [
     "static/js/runtime-main.82c4d401.js",
-    "static/css/2.0b5d44dd.chunk.css",
-    "static/js/2.68ddea23.chunk.js",
-    "static/css/main.5e918d3b.chunk.css",
-    "static/js/main.881e1725.chunk.js"
+    "static/js/2.5a9d0500.chunk.js",
+    "static/css/main.2988e5dc.chunk.css",
+    "static/js/main.98efc2cd.chunk.js"
   ]
 }
