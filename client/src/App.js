@@ -21,8 +21,7 @@ class App extends React.Component {
       .get("/api")
       .then((response) => {
         const data = response.data;
-        console.log(data);
-        // this.setState({ posts: data });
+        this.setState({ posts: data });
         console.log("Data has been received!!");
       })
       .catch(() => {
@@ -82,33 +81,7 @@ class App extends React.Component {
     //JSX
     return (
       <div className="app">
-        <h2>Welcome to the best app ever</h2>
-        <form onSubmit={this.submit}>
-          <div className="form-input">
-            <input
-              type="text"
-              name="title"
-              placeholder="Title"
-              value={this.state.title}
-              onChange={this.handleChange}
-            />
-          </div>
-          <div className="form-input">
-            <textarea
-              placeholder="body"
-              name="body"
-              cols="30"
-              rows="10"
-              value={this.state.body}
-              onChange={this.handleChange}
-            ></textarea>
-          </div>
-
-          <button>Submit</button>
-        </form>
-
-        <div className="blog-">{this.displayBlogPost(this.state.posts)}</div>
-        <AppDev />
+        <AppDev data={this.state.data} />
       </div>
     );
   }
