@@ -1,12 +1,9 @@
-import React from "react";
-import Table2 from "./Table2";
+import Minesweeper from "./Minesweeper";
 
-export default function App({ data }: { data: any }) {
-  let abv: string = "Hello world";
+export default function App() {
   return (
     <div>
-      {abv}
-      <Table2 ownerId="609225dad483eb0015419d09"></Table2>
+      <Minesweeper />
     </div>
   );
 }
