@@ -12,7 +12,6 @@
     "@types/react-dom": "^17.0.3",
     "antd": "^4.15.3",
     "axios": "^0.21.1",
-    "crypto-js": "^4.0.0",
     "gh-pages": "^3.1.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
@@ -45,8 +44,5 @@
     ]
   },
   "homepage": "http://dbzahariev.github.io/minesweeper",
-  "proxy": "http://localhost:8080",
-  "devDependencies": {
-    "@types/crypto-js": "^4.0.1"
-  }
+  "proxy": "http://localhost:8080"
 }

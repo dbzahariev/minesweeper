@@ -51,6 +51,7 @@ const Button: React.FC<{
   const [prevClickType, setPrevClickType] = useState<string>("");
 
   useEffect(() => {
+    console.log(prevClickType);
     const timer = setInterval(() => {
       setPrevClickType("");
     }, 1000);
@@ -59,6 +60,21 @@ const Button: React.FC<{
       clearInterval(timer);
     };
   }, [prevClickType]);
+
+  // const foo = (e: any) => {
+  //   setPrevClickType(e.type);
+  //   if (prevClickType !== "") {
+  //     if (prevClickType === "click") {
+  //       if (!hesDie) {
+  //         onClick(row, col)();
+  //       }
+  //       // !hesDie ? onClick(row, col) : () => {};
+  //     }
+  //     if (prevClickType === "contextmenu") {
+  //       onContext(row, col)(e);
+  //     }
+  //   }
+  // };
 
   return (
     <button

@@ -6,8 +6,6 @@ import Button from "./Button";
 import "../styles/App.scss";
 import { MAX_COLS, MAX_ROWS, NO_OF_BOMBS } from "../constants";
 import axios from "axios";
-import ExportAndImport from "./ExportAndImport";
-import Table2 from "./Table";
 
 let genCells = () => {
   // eslint-disable-next-line
@@ -620,52 +618,22 @@ const App: React.FC = () => {
     setFace(Face.smile);
   };
 
-  const getAllGames = () => {
-    console.log("log game:");
-    axios
-      .get("/api")
-      .then((response) => {
-        const data = response.data;
-        console.log(data);
-        // data.forEach((data: any) => {
-        //   // console.log(data);
-        //   alert(`${data.owner} have ${data.games.length} games!`);
-        // });
-      })
-      .catch(() => {
-        alert("Error retrieving data!!!");
-      });
-  };
-
-  const getGamesById = () => {
-    let ownerId = "609580eb5a5d3a17c8002231";
-    axios
-      .get(`/api?id=${ownerId}`)
-      .then((response) => {
-        const gamesForId = response.data.games;
-        console.log(gamesForId);
-      })
-      .catch(() => {
-        alert("Error retrieving data!!!");
-      });
-  };
-
-  const testServer = () => {
-    axios
-      .get("/api")
-      .then((response) => {
-        const data = response.data;
-        data.forEach((data: any) => {
-          alert(`${data.owner} have ${data.games.length} games!`);
-        });
-      })
-      .catch(() => {
-        alert("Error retrieving data!!!");
-      });
-  };
-
   // eslint-disable-next-line
   const submit = () => {
+    const testServer = () => {
+      axios
+        .get("/api")
+        .then((response) => {
+          const data = response.data;
+          data.forEach((data: any) => {
+            alert(`${data.owner} have ${data.games.length} games!`);
+          });
+        })
+        .catch(() => {
+          // alert("Error retrieving data!!!");
+        });
+    };
+
     const oneGame = {
       time: 10,
       date: new Date(),
@@ -695,41 +663,18 @@ const App: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <ExportAndImport />
-        {/* <button onClick={testServer}>ts</button> */}
-        <button onClick={getAllGames}>gag</button>
-        <button onClick={getGamesById}>gag by id</button>
-      </div>
-      <div className="App">
-        <div className="Header">
-          <NumberDisplay value={bombCounter} />
-          <div className="Face">
-            <span role="img" aria-label="face" onClick={handleFaceClick}>
-              {face}
-            </span>
-          </div>
-          <NumberDisplay value={time} />
+    <div className="App">
+      {/* <button onClick={submit}>create games</button> */}
+      <div className="Header">
+        <NumberDisplay value={bombCounter} />
+        <div className="Face">
+          <span role="img" aria-label="face" onClick={handleFaceClick}>
+            {face}
+          </span>
         </div>
-        <div className="Body">{renderCells()}</div>
+        <NumberDisplay value={time} />
       </div>
-      <Table2 ownerId={"60957d8a1d870f1c7c1073a0"} />
+      <div className="Body">{renderCells()}</div>
     </div>
   );
 };
