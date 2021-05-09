@@ -7,6 +7,10 @@
   border-top-color: $left-top;
 }
 
+.green {
+  background-color: "green";
+}
+
 @mixin buttons {
   &:active {
     border-right-color: #fff;
