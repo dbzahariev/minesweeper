@@ -3,7 +3,7 @@ import { Cell, CellState, CellValue, Face } from "../types";
 import { generateCells, openMultipleCells } from "../utils";
 import NumberDisplay from "./NumberDisplay";
 import Button from "./Button";
-import "../styles/Minesweeper.scss";
+import "../styles/App.scss";
 import { MAX_COLS, MAX_ROWS, NO_OF_BOMBS } from "../constants";
 import axios from "axios";
 

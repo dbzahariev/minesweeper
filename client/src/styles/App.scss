@@ -1,10 +1,9 @@
 @import "./index.scss";
 
-.Minesweeper {
+.App {
   @include borders(white, #999);
   background: #c2c2c2;
   padding: 16px;
-  margin: 10px;
 }
 
 .Header {
@@ -19,6 +18,8 @@
 .Body {
   @include borders(#7b7b7b, white);
   display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
   margin-top: 16px;
 }
 
