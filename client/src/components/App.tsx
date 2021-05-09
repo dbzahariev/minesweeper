@@ -7,14 +7,12 @@ import axios from "axios";
 
 export default function App() {
   const getAllGames = () => {
-    console.log("log game:");
     axios
       .get("/api")
       .then((response) => {
+        // eslint-disable-next-line
         const data = response.data;
-        console.log(data);
         // data.forEach((data: any) => {
-        //   // console.log(data);
         //   alert(`${data.owner} have ${data.games.length} games!`);
         // });
       })
@@ -28,13 +26,106 @@ export default function App() {
     axios
       .get(`/api?id=${ownerId}`)
       .then((response) => {
+        // eslint-disable-next-line
         const gamesForId = response.data.games;
-        console.log(gamesForId);
       })
       .catch(() => {
         alert("Error retrieving data!!!");
       });
   };
+
+  const regUser = ({
+    username,
+    password,
+  }: {
+    username: string;
+    password: string;
+  }) => {
+    axios({
+      method: "POST",
+      data: {
+        username: username,
+        password: password,
+      },
+      withCredentials: true,
+      url: "/user/register",
+    }).then((res) => console.log(res));
+  };
+
+  const logInUser = ({
+    username,
+    password,
+  }: {
+    username: string;
+    password: string;
+  }) => {
+    axios({
+      method: "POST",
+      data: {
+        username: username,
+        password: password,
+      },
+      withCredentials: true,
+      url: "/user/login",
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
+  const delUser = ({
+    username,
+    password,
+  }: {
+    username: string;
+    password: string;
+  }) => {
+    axios({
+      method: "DELETE",
+      data: {
+        username: username,
+        password: password,
+      },
+      withCredentials: true,
+      url: "/user/delete",
+    }).then((res) => console.log(res));
+  };
+
+  const getUser = () => {
+    console.log("hii");
+    axios({
+      method: "GET",
+      withCredentials: true,
+      url: "/user/showMyUsername",
+    })
+      .then((res) => {
+        // setData(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
+
+  const resUser = ({
+    username,
+    password,
+  }: {
+    username: string;
+    password: string;
+  }) => {
+    axios({
+      method: "POST",
+      data: {
+        username: username,
+        password: password,
+      },
+      withCredentials: true,
+      url: "/user/reset",
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div>
       <div
@@ -50,6 +141,37 @@ export default function App() {
         {/* <button onClick={testServer}>ts</button> */}
         <button onClick={getAllGames}>gag</button>
         <button onClick={getGamesById}>gag by id</button>
+        <button
+          onClick={() => regUser({ username: "ramsess", password: "123456" })}
+        >
+          {`reg 1`}
+        </button>
+        <button
+          onClick={() => regUser({ username: "rame", password: "123456" })}
+        >
+          {`reg 2`}
+        </button>
+        <button
+          onClick={() => logInUser({ username: "ramsess", password: "123456" })}
+        >
+          {`log 1`}
+        </button>
+        <button
+          onClick={() => logInUser({ username: "rame", password: "1123456" })}
+        >
+          {`log 2`}
+        </button>
+        <button onClick={getUser}>get user</button>
+        <button
+          onClick={() => delUser({ username: "ramsess", password: "123456" })}
+        >
+          del user 1
+        </button>
+        {/* <button
+          onClick={() => resUser({ username: "ramsess", password: "1234561" })}
+        >
+          res user 1
+        </button> */}
       </div>
       <Minesweeper />
       <Table2 ownerName="rame" />

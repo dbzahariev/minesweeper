@@ -537,7 +537,6 @@ function App() {
 
   const checkWin = (): boolean => {
     let res = false;
-    // console.log(getSafeOpenCellsExist());
     if (getSafeOpenCellsExist().numberOfOpenCells === 0) {
       res = true;
     }

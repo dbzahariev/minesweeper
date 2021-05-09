@@ -11,16 +11,15 @@ function ExportAndImport() {
       JSON.stringify(data),
       data.owner
     ).toString();
-    console.log("enc", cryptoText);
     return cryptoText;
   };
   const decryptionGame = () => {
     let cryptoText = encryptionGame();
 
+    // eslint-disable-next-line
     var decryptedData = JSON.parse(
       CryptoJS.AES.decrypt(cryptoText, data.owner).toString(CryptoJS.enc.Utf8)
     );
-    console.log(decryptedData);
   };
   return (
     <>

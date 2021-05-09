@@ -22,7 +22,6 @@ class App extends React.Component {
       .then((response) => {
         const data = response.data;
         this.setState({ posts: data });
-        console.log("Data has been received!!");
       })
       .catch(() => {
         alert("Error retrieving data!!!");
@@ -76,8 +75,6 @@ class App extends React.Component {
   };
 
   render() {
-    console.log("State: ", this.state);
-
     //JSX
     return (
       <div className="app">

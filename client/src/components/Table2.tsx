@@ -38,8 +38,6 @@ function Table2({ ownerId = "", ownerName }: Table2Props) {
     // eslint-disable-next-line
   }, []);
 
-  // console.log(getFF());
-
   const getAllGames = () => {
     axios
       .get(`/api`)
@@ -87,7 +85,6 @@ function Table2({ ownerId = "", ownerName }: Table2Props) {
 
         setData([...gamesForId, ...gamesForId, ...gamesForId, ...gamesForId]);
         setLoading(false);
-        console.log(gamesForId);
       })
       .catch(() => {
         setLoading(false);
@@ -96,7 +93,6 @@ function Table2({ ownerId = "", ownerName }: Table2Props) {
   };
 
   const fff = (): string[] | undefined => {
-    // console.log(ownerName);
     // if (ownerName) {
     //   return [ownerName];
     // } else {
@@ -104,7 +100,6 @@ function Table2({ ownerId = "", ownerName }: Table2Props) {
     // }
     return [ownerName];
   };
-  console.log(fff());
 
   const columns: ColumnsType<dataSourceType> = [
     {
