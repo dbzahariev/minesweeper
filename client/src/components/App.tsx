@@ -72,24 +72,6 @@ export default function App() {
       .catch((err) => console.log(err));
   };
 
-  const delUser = ({
-    username,
-    password,
-  }: {
-    username: string;
-    password: string;
-  }) => {
-    axios({
-      method: "DELETE",
-      data: {
-        username: username,
-        password: password,
-      },
-      withCredentials: true,
-      url: "/user/delete",
-    }).then((res) => console.log(res));
-  };
-
   const getUser = () => {
     console.log("hii");
     axios({
@@ -104,26 +86,6 @@ export default function App() {
       .catch((err) => {
         console.log("err", err);
       });
-  };
-
-  const resUser = ({
-    username,
-    password,
-  }: {
-    username: string;
-    password: string;
-  }) => {
-    axios({
-      method: "POST",
-      data: {
-        username: username,
-        password: password,
-      },
-      withCredentials: true,
-      url: "/user/reset",
-    })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
   };
 
   return (
@@ -162,16 +124,6 @@ export default function App() {
           {`log 2`}
         </button>
         <button onClick={getUser}>get user</button>
-        <button
-          onClick={() => delUser({ username: "ramsess", password: "123456" })}
-        >
-          del user 1
-        </button>
-        {/* <button
-          onClick={() => resUser({ username: "ramsess", password: "1234561" })}
-        >
-          res user 1
-        </button> */}
       </div>
       <Minesweeper />
       <Table2 ownerName="rame" />

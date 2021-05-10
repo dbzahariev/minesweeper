@@ -7,62 +7,12 @@ import Button from "./Button";
 
 import "../styles/Minesweeper.scss";
 
-let genCells = () => {
-  // eslint-disable-next-line
-  let cells1 = {
-    cells: generateCells(),
-    bombCounter: NO_OF_BOMBS,
-    live: false,
-    time: 0,
-  };
-  // eslint-disable-next-line
-  let cells2 = {
-    str: `[[{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":9,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0}],[{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":1,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0}],[{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":1,"state":0}],[{"value":1,"state":0},{"value":2,"state":0},{"value":2,"state":0},{"value":2,"state":0},{"value":1,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":9,"state":0}],[{"value":2,"state":0},{"value":9,"state":0},{"value":9,"state":0},{"value":2,"state":0},{"value":9,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":1,"state":0}],[{"value":9,"state":0},{"value":3,"state":0},{"value":2,"state":0},{"value":2,"state":0},{"value":1,"state":0},{"value":2,"state":0},{"value":1,"state":0},{"value":1,"state":0},{"value":0,"state":0}],[{"value":1,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":9,"state":0},{"value":2,"state":0},{"value":1,"state":0}],[{"value":1,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":2,"state":0},{"value":3,"state":0},{"value":9,"state":0}],[{"value":9,"state":0},{"value":1,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":0,"state":0},{"value":1,"state":0},{"value":9,"state":0},{"value":2,"state":0}]]`,
-    bombs: 9,
-  };
-  // eslint-disable-next-line
-  let cells3 = {
-    str: `[[{"value":0,"state":0},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":2},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1}],[{"value":1,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":2}],[{"value":2,"state":0},{"value":9,"state":0},{"value":9,"state":0},{"value":2,"state":0},{"value":9,"state":0},{"value":1,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1}],[{"value":9,"state":0},{"value":3,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1}],[{"value":1,"state":0},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":0},{"value":2,"state":1},{"value":1,"state":1}],[{"value":1,"state":0},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":3,"state":0},{"value":9,"state":2}],[{"value":9,"state":0},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":0},{"value":2,"state":0}]]`,
-    bombs: 9,
-  };
-  // eslint-disable-next-line
-  let cells4 = {
-    str: `[[{"value":0,"state":0},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":2},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1}],[{"value":1,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":2}],[{"value":2,"state":1},{"value":9,"state":2},{"value":9,"state":2},{"value":2,"state":1},{"value":9,"state":2},{"value":1,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1}],[{"value":9,"state":2},{"value":3,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1}],[{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":2},{"value":2,"state":1},{"value":1,"state":1}],[{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":3,"state":1},{"value":9,"state":2}],[{"value":9,"state":2},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":9,"state":0},{"value":2,"state":0}]]`,
-    bombs: 9,
-  };
-
-  // eslint-disable-next-line
-  let cells5: {
-    time: number;
-    live: boolean;
-    cells: Cell[][];
-    bombCounter: number;
-  } = JSON.parse(
-    `{"time":54,"live":true,"bombCounter":1,"cells":[[{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":1,"state":1},{"value":9,"state":2},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1}],[{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":1,"state":1}],[{"value":1,"state":1},{"value":1,"state":0},{"value":2,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":2,"state":1},{"value":9,"state":2},{"value":2,"state":1},{"value":9,"state":2}],[{"value":2,"state":1},{"value":9,"state":0},{"value":2,"state":1},{"value":9,"state":2},{"value":9,"state":2},{"value":2,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":1,"state":1}],[{"value":9,"state":2},{"value":2,"state":1},{"value":3,"state":1},{"value":3,"state":1},{"value":3,"state":1},{"value":1,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1}],[{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":9,"state":2},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":2,"state":1},{"value":9,"state":2}],[{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":9,"state":2},{"value":2,"state":1},{"value":1,"state":1}],[{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":0,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":1,"state":1},{"value":0,"state":1}]]}`
-  );
-
-  let { time, live, cells, bombCounter } = cells1;
-  // let { time, live, cells, bombCounter } = cells5;
-
-  let res = {
-    cells: cells,
-    time,
-    live,
-    bombCounter,
-  };
-
-  return res;
-};
-
 function App() {
-  // const [cells, setCells] = useState<Cell[][]>(generateCells());
-  const [cells, setCells] = useState<Cell[][]>(genCells().cells);
+  const [cells, setCells] = useState<Cell[][]>(generateCells());
   const [face, setFace] = useState<Face>(Face.smile);
-  const [time, setTime] = useState<number>(genCells().time);
-  const [live, setLive] = useState<boolean>(genCells().live);
-  const [bombCounter, setBombCounter] = useState<number>(
-    genCells().bombCounter
-  );
+  const [time, setTime] = useState<number>(0);
+  const [live, setLive] = useState<boolean>(false);
+  const [bombCounter, setBombCounter] = useState<number>(NO_OF_BOMBS);
   const [hesLost, setHesLost] = useState<boolean>(false);
   const [hesWon, setHesWon] = useState<boolean>(false);
 

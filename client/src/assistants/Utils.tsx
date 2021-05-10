@@ -87,7 +87,7 @@ export const generateCells = (): Cell[][] => {
     }
   }
 
-  // Randomly put 10 bombs
+  // Randomly put bombs
   cells = generateBombs(cells, NO_OF_BOMBS);
 
   // Calculate the number for each cell

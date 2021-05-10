@@ -72,30 +72,32 @@ require("./passportConfig")(passport);
 // ----------------- users -----------------
 
 app.post("/user/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) throw err;
-    console.log("log", user, info);
-    if (!user) {
-      res.status(403).json({
+  console.log("log", req);
+  passport.authenticate("local", (err, user) => {
+    if (err) {
+      res.status(500).json({ msg: err });
+      throw err;
+      // return
+    }
+    if (!user)
+      return res.json({
         msg: `Incorrect username or password!`,
       });
-    } else {
-      req.logIn(user, (err) => {
-        if (err) {
-          res.status(500).json({ msg: "Error" });
-          throw err;
-        } else {
-          res.json({ msg: "OK", userId: user._id });
-        }
-      });
-    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        return res.status(200).json({ msg: "User not found" });
+      } else {
+        return res.json({ username: req.user.username, id: req.user._id });
+      }
+    });
   })(req, res, next);
 });
 
 app.post("/user/register", (req, res) => {
   User.findOne({ username: req.body.username }, async (err, doc) => {
     if (err) throw err;
-    if (doc) res.send("User Already Exists");
+    if (doc) res.json({ msg: "User Already Exists" });
     if (!doc) {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
@@ -104,55 +106,12 @@ app.post("/user/register", (req, res) => {
         password: hashedPassword,
       });
       await newUser.save();
-      console.log("reg", newUser);
-      res.send("User Created");
-    }
-  });
-});
-
-app.delete("/user/delete", (req, res) => {
-  console.log(req.user);
-  if (!req.user) {
-    res.status(403).json({ msg: `You don't have permission. Please login!` });
-    return null;
-  }
-  User.findOneAndDelete({ username: req.user })
-    .then((data) => {
-      let username = data.username;
-      res.json({ msg: `${username} was deleted` });
-    })
-    .catch((error) => {
-      res.status(500).json({ msg: error });
-      return;
-    });
-});
-
-app.post("/user/reset", (req, res) => {
-  // if (req.isAuthenticated()) {
-  //   //user is alreay logged in
-  //   return res.redirect("/");
-  // }
-  User.reset(req, res, (err) => {
-    if (err) {
-      console.log("reset", err);
-      res.status(500).json({ msg: error });
-      return;
-      // req.flash("error", err);
-      // return res.redirect("/reset");
-    } else {
-      // req.flash(
-      //   "success",
-      //   "Password successfully reset.  Please login using new password."
-      // );
-      res.json({ msg: "OK" });
-      return;
-      // return res.redirect("/login");
+      res.json({ msg: "User Created" });
     }
   });
 });
 
 app.get("/user/showMyUsername", (req, res) => {
-  console.log(req.user);
   if (req.user) {
     res.json(req.user); // The req.user stores the entire user that has been authenticated inside of it.
   } else res.json({ msg: "Please login" });
