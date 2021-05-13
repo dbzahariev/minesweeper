@@ -33,8 +33,6 @@ router.post("/update", (req, res) => {
   const data = req.body || {};
   let id = req?.query?.id;
 
-  console.log(data.games);
-
   if (!id) {
     res.status(404).json({ msg: `Not found id (${id})` });
     return;
@@ -46,8 +44,6 @@ router.post("/update", (req, res) => {
   if (id) {
     Games.findByIdAndUpdate(id, data, { useFindAndModify: false })
       .then((data2) => {
-        console.log(data2);
-        // res.json({ data });
         res.json({ msg: "OK" });
         return;
       })
@@ -65,8 +61,6 @@ router.post("/addgame", (req, res) => {
   const data = req.body || {};
   let id = req?.query?.id;
 
-  // console.log(data);
-
   if (!id) {
     res.status(404).json({ msg: `Not found id (${id})` });
     return;
@@ -78,7 +72,6 @@ router.post("/addgame", (req, res) => {
   Games.findById(id).then((foundedGame) => {
     let oldGames = foundedGame.games.slice();
     oldGames.push(data);
-    console.log(oldGames, id);
     Games.findByIdAndUpdate(
       id,
       { games: oldGames },
@@ -97,7 +90,6 @@ router.post("/addgame", (req, res) => {
 
 router.post("/create", (req, res) => {
   const data = req.body;
-  console.log(data);
 
   if (data.owner && data.games) {
     const newGames = new Games(data);
@@ -125,7 +117,6 @@ router.post("/save", (req, res) => {
 
   newGames.save((error) => {
     if (error) {
-      console.log(error.message);
       res.status(500).json({ msg: error });
       return;
     }

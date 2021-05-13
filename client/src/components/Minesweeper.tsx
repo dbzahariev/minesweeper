@@ -399,59 +399,56 @@ function App() {
     return res;
   };
 
-  const handleCellClick = (
-    rowParam: number,
-    colParam: number,
-    fromReval?: boolean
-  ) => (): void => {
-    if (
-      rowParam < 0 ||
-      colParam >= MAX_COLS ||
-      colParam < 0 ||
-      rowParam >= MAX_ROWS
-    ) {
-      return;
-    }
+  const handleCellClick =
+    (rowParam: number, colParam: number, fromReval?: boolean) => (): void => {
+      if (
+        rowParam < 0 ||
+        colParam >= MAX_COLS ||
+        colParam < 0 ||
+        rowParam >= MAX_ROWS
+      ) {
+        return;
+      }
 
-    let newCells: Cell[][] = cells.slice();
-    if (!live) {
-      // let isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
-      // if (isBomb) {
-      //   newCells = gg(rowParam, colParam).slice();
-      // }
-      // while (isBomb) {
-      //   newCells = generateCells();
-      //   isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
-      // }
-      setLive(true);
-    }
+      let newCells: Cell[][] = cells.slice();
+      if (!live) {
+        // let isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
+        // if (isBomb) {
+        //   newCells = gg(rowParam, colParam).slice();
+        // }
+        // while (isBomb) {
+        //   newCells = generateCells();
+        //   isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
+        // }
+        setLive(true);
+      }
 
-    if (fromReval !== true) {
-      newCells = setVisibleAroundMe(rowParam, colParam);
-    }
+      if (fromReval !== true) {
+        newCells = setVisibleAroundMe(rowParam, colParam);
+      }
 
-    const currentCell = newCells[rowParam][colParam];
+      const currentCell = newCells[rowParam][colParam];
 
-    if (currentCell.value === CellValue.bomb) {
-      setHesLost(true);
-      newCells[rowParam][colParam].red = true;
-      newCells[rowParam][colParam].state = CellState.visible;
-      newCells = showAllBombs();
+      if (currentCell.value === CellValue.bomb) {
+        setHesLost(true);
+        newCells[rowParam][colParam].red = true;
+        newCells[rowParam][colParam].state = CellState.visible;
+        newCells = showAllBombs();
+
+        setCells(newCells);
+        return;
+      } else if (currentCell.value === CellValue.none) {
+        newCells = openMultipleCells(cells, rowParam, colParam);
+      } else {
+        // Click on a number
+        newCells[rowParam][colParam].state = CellState.visible;
+      }
+      if (checkWin()) {
+        setHesWon(true);
+      }
 
       setCells(newCells);
-      return;
-    } else if (currentCell.value === CellValue.none) {
-      newCells = openMultipleCells(cells, rowParam, colParam);
-    } else {
-      // Click on a number
-      newCells[rowParam][colParam].state = CellState.visible;
-    }
-    if (checkWin()) {
-      setHesWon(true);
-    }
-
-    setCells(newCells);
-  };
+    };
 
   const getSafeOpenCellsExist = () => {
     let numberOfOpenCells = 0;
@@ -496,34 +493,34 @@ function App() {
     return res;
   };
 
-  const handleCellRightClick = (rowParam: number, colParam: number) => (
-    e: React.MouseEvent<HTMLDivElement>
-  ): void => {
-    e.preventDefault();
+  const handleCellRightClick =
+    (rowParam: number, colParam: number) =>
+    (e: React.MouseEvent<HTMLDivElement>): void => {
+      e.preventDefault();
 
-    if (!live) {
-      return;
-    }
-
-    const currentCells = cells.slice();
-    const currentCell = cells[rowParam][colParam];
-
-    if (currentCell.state !== CellState.visible) {
-      if (currentCells[rowParam][colParam].state !== CellState.flagged) {
-        currentCells[rowParam][colParam].state = CellState.flagged;
-        setCells(currentCells);
-        setBombCounter(bombCounter - 1);
-      } else {
-        currentCells[rowParam][colParam].state = CellState.open;
-        setCells(currentCells);
-        setBombCounter(bombCounter + 1);
+      if (!live) {
+        return;
       }
-    }
 
-    if (checkWin()) {
-      setHesWon(true);
-    }
-  };
+      const currentCells = cells.slice();
+      const currentCell = cells[rowParam][colParam];
+
+      if (currentCell.state !== CellState.visible) {
+        if (currentCells[rowParam][colParam].state !== CellState.flagged) {
+          currentCells[rowParam][colParam].state = CellState.flagged;
+          setCells(currentCells);
+          setBombCounter(bombCounter - 1);
+        } else {
+          currentCells[rowParam][colParam].state = CellState.open;
+          setCells(currentCells);
+          setBombCounter(bombCounter + 1);
+        }
+      }
+
+      if (checkWin()) {
+        setHesWon(true);
+      }
+    };
 
   useEffect(() => {
     if (getSafeOpenCellsExist().numberOfOpenCells > 0 && bombCounter === 0) {
@@ -564,30 +561,32 @@ function App() {
   };
 
   return (
-    <div
-      style={{
-        width: `${55 + 30 * MAX_COLS}px`,
-        height: `${145 + 30 * MAX_ROWS}px`,
-      }}
-      className="Minesweeper"
-    >
-      <div className="Header">
-        <NumberDisplay value={bombCounter} />
-        <div className="Face">
-          <span role="img" aria-label="face" onClick={handleFaceClick}>
-            {face}
-          </span>
-        </div>
-        <NumberDisplay value={time} />
-      </div>
+    <div style={{ padding: "2%" }}>
       <div
-        className="Body"
         style={{
-          gridTemplateColumns: `repeat(${MAX_COLS}, 1fr)`,
-          gridTemplateRows: `repeat(${MAX_ROWS}, 1fr)`,
+          width: `${55 + 30 * MAX_COLS}px`,
+          height: `${145 + 30 * MAX_ROWS}px`,
         }}
+        className="Minesweeper"
       >
-        {renderCells()}
+        <div className="Header">
+          <NumberDisplay value={bombCounter} />
+          <div className="Face">
+            <span role="img" aria-label="face" onClick={handleFaceClick}>
+              {face}
+            </span>
+          </div>
+          <NumberDisplay value={time} />
+        </div>
+        <div
+          className="Body"
+          style={{
+            gridTemplateColumns: `repeat(${MAX_COLS}, 1fr)`,
+            gridTemplateRows: `repeat(${MAX_ROWS}, 1fr)`,
+          }}
+        >
+          {renderCells()}
+        </div>
       </div>
     </div>
   );

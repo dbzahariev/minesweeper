@@ -71,8 +71,12 @@ require("./passportConfig")(passport);
 
 // ----------------- users -----------------
 
+app.get("/user/logout", (req, res) => {
+  req.logout();
+  res.json({ msg: "ok" });
+});
+
 app.post("/user/login", (req, res, next) => {
-  console.log("log", req);
   passport.authenticate("local", (err, user) => {
     if (err) {
       res.status(500).json({ msg: err });

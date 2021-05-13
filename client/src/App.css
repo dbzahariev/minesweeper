@@ -1,5 +1,10 @@
 @import "~antd/dist/antd.css";
 
-.app {
-  padding: 10px;
+.App {
+  padding: 1%;
+  background-color: #fff9d7;
+  /* width: 100vw; */
+  /* height: 100%; */
+  width: auto;
+  height: auto;
 }

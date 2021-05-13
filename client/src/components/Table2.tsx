@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Space, Table, Typography } from "antd";
 import axios from "axios";
 import { ColumnsType } from "antd/lib/table";
-// type masterType = { time: number; date: string };
+
 type masterType = { time: number; date: string; owner: string };
-// type dataSourceType = { time: number; date: string; key: number };
+
 type dataSourceType = {
   owner: string;
   time: number;
@@ -21,19 +21,13 @@ type FilterFieldsType = {
   }[];
 };
 
-interface Table2Props {
-  ownerId?: string;
-  ownerName: string;
-}
-
-function Table2({ ownerId = "", ownerName }: Table2Props) {
+function Table2({ ownerName = null }: { ownerName: string[] | null }) {
   const [data, setData] = useState<masterType[]>([]);
   const [filterFields, setFilterFields] = useState<FilterFieldsType[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortTime, setSortTime] = useState<"descend" | "ascend" | null>(null);
 
   useEffect(() => {
-    // getGamesById(ownerId);
     getAllGames();
     // eslint-disable-next-line
   }, []);
@@ -74,31 +68,25 @@ function Table2({ ownerId = "", ownerName }: Table2Props) {
       });
   };
 
-  // eslint-disable-next-line
-  const getGamesById = (ownerId: string = "609580eb5a5d3a17c8002231") => {
-    axios
-      .get(`/api?id=${ownerId}`)
-      .then((response) => {
-        const gamesForId: masterType[] = response.data.games;
+  let dataSource: dataSourceType[] = data.map((el, elIndex) => ({
+    key: elIndex + 1,
+    time: el.time,
+    date: el.date,
+    owner: el.owner,
+  }));
 
-        // gamesForId.sort((a, b) => a.time - b.time);
-
-        setData([...gamesForId, ...gamesForId, ...gamesForId, ...gamesForId]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-        alert("Error retrieving data!!!");
-      });
+  const onChange = (a1: any, a2: any, a3: any, a4: any) => {
+    if (a4.action === "sort") {
+      if (sortTime === "descend") setSortTime(null);
+      if (sortTime === "ascend") setSortTime("descend");
+      if (sortTime === null) setSortTime("ascend");
+    }
   };
 
-  const fff = (): string[] | undefined => {
-    // if (ownerName) {
-    //   return [ownerName];
-    // } else {
-    //   return undefined;
-    // }
-    return [ownerName];
+  const getLoginUser = () => {
+    let username: string = localStorage.getItem("username") || "";
+    if (username) return [username];
+    else return null;
   };
 
   const columns: ColumnsType<dataSourceType> = [
@@ -116,7 +104,7 @@ function Table2({ ownerId = "", ownerName }: Table2Props) {
       onFilter: (value: any, record: any) => {
         return value === record.owner;
       },
-      defaultFilteredValue: fff(),
+      defaultFilteredValue: getLoginUser(),
     },
     {
       title: "Time",
@@ -132,49 +120,33 @@ function Table2({ ownerId = "", ownerName }: Table2Props) {
     },
   ];
 
-  let dataSource: dataSourceType[] = data.map((el, elIndex) => ({
-    key: elIndex + 1,
-    time: el.time,
-    date: el.date,
-    owner: el.owner,
-  }));
-
-  const onChange = (a1: any, a2: any, a3: any, a4: any) => {
-    if (a4.action === "sort") {
-      if (sortTime === "descend") setSortTime(null);
-      if (sortTime === "ascend") setSortTime("descend");
-      if (sortTime === null) setSortTime("ascend");
-    }
-  };
+  if (ownerName === null) {
+    return null;
+  }
 
   return (
     <div
       style={{
         width: "600px",
         height: "660px",
-        // borderWidth: "2px",
-        // borderColor: "black",
-        // borderStyle: "solid",
       }}
     >
       <Table
-        title={() => {
-          return (
-            <Space
-              style={{ width: "100%" }}
-              align="center"
-              direction="vertical"
-            >
-              <Typography.Text>Hi</Typography.Text>
-            </Space>
-          );
-        }}
+        style={
+          {
+            // backgroundColor: "red",
+          }
+        }
+        title={() => (
+          <Space style={{ width: "100%" }} align="center" direction="vertical">
+            <Typography.Text>Records</Typography.Text>
+          </Space>
+        )}
         showSorterTooltip={false}
         loading={loading}
         bordered={true}
         dataSource={dataSource}
         columns={columns}
-        // scroll={{ y: 110 }}
         size="large"
         onChange={onChange}
         pagination={{ position: ["bottomCenter"], size: "small" }}

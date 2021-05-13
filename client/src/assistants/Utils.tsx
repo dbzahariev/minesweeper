@@ -79,6 +79,12 @@ const grabAllAbjectnessCells = (
 
 export const generateCells = (): Cell[][] => {
   let cells: Cell[][] = [];
+
+  // Control Bombs
+  if (MAX_ROWS * MAX_COLS <= NO_OF_BOMBS) {
+    return cells;
+  }
+
   // Generate all Cells
   for (let row = 0; row < MAX_ROWS; row++) {
     cells.push([]);
