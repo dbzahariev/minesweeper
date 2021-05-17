@@ -1,6 +1,4 @@
 # No modules
 node_modules
 .vscode/
-.vscode/settings.json
 client/build
-.vscode/settings.json
