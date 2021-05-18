@@ -10,6 +10,7 @@ type dataSourceType = {
   time: number;
   date: string;
   key: number;
+  index: number;
 };
 
 type FilterFieldsType = {
@@ -21,7 +22,13 @@ type FilterFieldsType = {
   }[];
 };
 
-function Table2({ ownerName = null }: { ownerName: string[] | null }) {
+function Table2({
+  ownerName = null,
+  reload = 0,
+}: {
+  ownerName: string[] | null;
+  reload: number;
+}) {
   const [data, setData] = useState<masterType[]>([]);
   const [filterFields, setFilterFields] = useState<FilterFieldsType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +37,7 @@ function Table2({ ownerName = null }: { ownerName: string[] | null }) {
   useEffect(() => {
     getAllGames();
     // eslint-disable-next-line
-  }, []);
+  }, [reload, ownerName]);
 
   const getAllGames = () => {
     axios
@@ -68,11 +75,30 @@ function Table2({ ownerName = null }: { ownerName: string[] | null }) {
       });
   };
 
-  let dataSource: dataSourceType[] = data.map((el, elIndex) => ({
-    key: elIndex + 1,
+  const getData = () => {
+    let result: dataSourceType[] = [];
+    let names: string[] = [];
+    data.forEach((el) => {
+      if (names.indexOf(el.owner) === -1) {
+        names.push(el.owner);
+      }
+    });
+    names.forEach((name) => {
+      let miniData: any[] = data.filter((el) => el.owner === name);
+      miniData.forEach((el, elIndex) => {
+        let indexedGame = { ...el, index: elIndex + 1 };
+        result.push(indexedGame);
+      });
+    });
+    return result;
+  };
+
+  let dataSource: dataSourceType[] = getData().map((el, elIndex) => ({
+    key: elIndex,
     time: el.time,
-    date: el.date,
+    date: new Date(el.date).toLocaleString("bg-bg"),
     owner: el.owner,
+    index: el.index,
   }));
 
   const onChange = (a1: any, a2: any, a3: any, a4: any) => {
@@ -92,8 +118,8 @@ function Table2({ ownerName = null }: { ownerName: string[] | null }) {
   const columns: ColumnsType<dataSourceType> = [
     {
       title: "No",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "index",
+      key: "index",
       width: 60,
     },
     {
@@ -128,7 +154,7 @@ function Table2({ ownerName = null }: { ownerName: string[] | null }) {
     <div
       style={{
         width: "600px",
-        height: "660px",
+        height: "700px",
       }}
     >
       <Table

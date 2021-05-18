@@ -5,6 +5,10 @@ const Schema = mongoose.Schema;
 const GamesSchema = new Schema({
   owner: String,
   games: Array,
+  settings: {
+    type: String,
+    default: "",
+  },
   date: {
     type: String,
     default: Date.now(),

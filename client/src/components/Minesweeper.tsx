@@ -6,8 +6,11 @@ import NumberDisplay from "./NumberDisplay";
 import Button from "./Button";
 
 import "../styles/Minesweeper.scss";
+import axios from "axios";
+// eslint-disable-next-line
+import { showNotification } from "./App";
 
-function App() {
+function App(props: any) {
   const [cells, setCells] = useState<Cell[][]>(generateCells());
   const [face, setFace] = useState<Face>(Face.smile);
   const [time, setTime] = useState<number>(0);
@@ -82,6 +85,44 @@ function App() {
     );
   };
 
+  const addGame = () => {
+    let date = new Date().toISOString();
+    let gameData = { time: time || 1, date: date };
+    let username = localStorage.getItem("username") || "";
+
+    axios.get("/api").then((response) => {
+      let found =
+        response.data.findIndex((el: any) => el.owner === username) > -1;
+      if (found) {
+        axios({
+          method: "POST",
+          data: gameData,
+          withCredentials: true,
+          url: `/api/addgame?name=${localStorage.getItem("username")}`,
+        })
+          .then((res) => {
+            showNotification(res.data.msg, 1, res.data.type);
+            props.setReload(props.reload + 1);
+          })
+          .catch((err) => console.error(err));
+      } else {
+        axios({
+          method: "POST",
+          data: { owner: username, games: [gameData] },
+          withCredentials: true,
+          url: `/api/create`,
+        })
+          .then((res) => {
+            showNotification(res.data.msg, 1, res.data.type);
+
+            localStorage.setItem("username", username);
+            props.setReload(props.reload + 1);
+          })
+          .catch((err) => console.error(err));
+      }
+    });
+  };
+
   useEffect(() => {
     if (hesLost) {
       let bombs = showAllBombs();
@@ -94,6 +135,9 @@ function App() {
       setCells(bombs);
       setFace(Face.won);
       setLive(false);
+      addGame();
+      // changeOwner("ramsess");
+      // props.ss("ramsess");
     }
     // eslint-disable-next-line
   }, [hesLost, hesWon]);

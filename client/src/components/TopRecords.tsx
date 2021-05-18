@@ -1,12 +1,15 @@
 import { Space, Tabs, Typography } from "antd";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../UserContext";
 import Table2 from "./Table2";
 
 const { TabPane } = Tabs;
 
-export default function TopRecords() {
-  let ownerName = localStorage.getItem("username");
+export default function TopRecords(props: any) {
+  // let ownerName = localStorage.getItem("username") || "";
+  const { user } = useContext(UserContext);
+
   const [statistic, setStatistic] =
     useState<{
       bestRecords: {
@@ -18,20 +21,25 @@ export default function TopRecords() {
     } | null>(null);
 
   useEffect(() => {
+    console.log("refresh");
     getAllGames();
     // eslint-disable-next-line
-  }, []);
+  }, [props.reload, user]);
 
   const getAllGames = () => {
+    if (!user) {
+      return null;
+    }
     axios
       .get("/api")
       .then((response) => {
-        console.clear();
         let bestRecords: { date: string; time: number };
 
         let newData: any[] = response.data
           .slice()
-          .filter((el: any) => el.owner === ownerName)[0]
+          .filter((el: any) => {
+            return el.owner === user.toString();
+          })[0]
           .games.sort((a: any, b: any) => a.time - b.time);
         bestRecords = newData[0];
 
@@ -43,9 +51,13 @@ export default function TopRecords() {
 
         let kk = { bestRecords, averageTime, allRecordsCount: newData.length };
 
+        console.log(kk);
+
         setStatistic(kk);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const getBestTimes = () => {
@@ -69,10 +81,6 @@ export default function TopRecords() {
     return null;
   };
 
-  if (!ownerName || !statistic) {
-    return null;
-  }
-
   return (
     <div
       style={{
@@ -83,14 +91,11 @@ export default function TopRecords() {
       <Tabs defaultActiveKey="1">
         <TabPane tab="Top Records" key="1">
           <div style={{}}>
-            <Space direction="vertical">
-              {/* <Typography.Text>{`hi ${ownerName}`}</Typography.Text> */}
-              {getBestTimes()}
-            </Space>
+            <Space direction="vertical">{getBestTimes()}</Space>
           </div>
         </TabPane>
         <TabPane tab="Whole table" key="2">
-          <Table2 ownerName={ownerName ? [ownerName] : null} />
+          <Table2 ownerName={user ? [user] : null} reload={props.reload} />
         </TabPane>
       </Tabs>
     </div>

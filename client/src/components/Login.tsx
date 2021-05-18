@@ -41,12 +41,12 @@ export default function Login() {
       url: "/user/login",
     }).then((res) => {
       if (res.data.username && res.data.username.length > 0) {
-        showNotification(`Hello ${res.data.username}`, 1, "success");
+        showNotification(`Hello ${res.data.username}`, 1, res.data.type);
         window.location.reload();
         setIsModalVisible(false);
         setLoading(false);
       } else {
-        showNotification(res.data.msg, 1, "error");
+        showNotification(res.data.msg, 1, res.data.type);
         setLoading(false);
       }
     });
@@ -69,13 +69,13 @@ export default function Login() {
       url: "/user/register",
     }).then((res) => {
       let msg: string = res.data.msg;
+      let type: "success" | "error" | "info" | "warning" | "open" | undefined =
+        res.data.type;
       if (msg.toLowerCase().indexOf("created") >= 0) {
-        showNotification(msg, 1, "success");
+        showNotification(msg, 1, type);
         setIsModalVisible(false);
-      } else if (msg.toLowerCase().indexOf("exists") >= 0) {
-        showNotification(msg, 1, "info");
       } else {
-        showNotification(msg, 1, "error");
+        showNotification(msg, 1, type);
       }
       setLoading(false);
     });
@@ -161,11 +161,11 @@ export default function Login() {
       withCredentials: true,
       url: "/user/logout",
     })
-      .then((res) => {
+      .then(() => {
         showNotification(`Bye bye`, 1, "success");
         window.location.reload();
       })
-      .catch((err) => {});
+      .catch((err) => console.error(err));
   };
 
   return (

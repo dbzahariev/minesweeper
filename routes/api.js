@@ -14,7 +14,10 @@ router.get("/", (req, res) => {
         res.json(data);
       })
       .catch((error) => {
-        res.status(404).json({ msg: `Not found ${error.kind} (${id})` });
+        res.status(404).json({
+          msg: `Not found ${error.kind} (${id})`,
+          type: typeMsg.error,
+        });
         return;
       });
   } else {
@@ -23,50 +26,109 @@ router.get("/", (req, res) => {
         res.json(data);
       })
       .catch((error) => {
-        res.status(500).json({ msg: error });
+        res.status(500).json({ msg: error, type: typeMsg.error });
         return;
       });
   }
 });
+
+let typeMsg = {
+  success: "success",
+  error: "error",
+  info: "info",
+  warning: "warning",
+};
 
 router.post("/update", (req, res) => {
   const data = req.body || {};
   let id = req?.query?.id;
 
   if (!id) {
-    res.status(404).json({ msg: `Not found id (${id})` });
+    res.status(404).json({ msg: `Not found id (${id})`, type: typeMsg.error });
     return;
   }
   if (!data.owner && !data.games) {
-    res.status(404).json({ msg: `Not found body` });
+    res.status(404).json({ msg: `Not found body`, type: typeMsg.error });
     return;
   }
   if (id) {
     Games.findByIdAndUpdate(id, data, { useFindAndModify: false })
       .then((data2) => {
-        res.json({ msg: "OK" });
+        res.json({ msg: "OK", type: typeMsg.success });
         return;
       })
       .catch((error) => {
-        res.status(404).json({ msg: `Not found ${error.kind} (${id})` });
+        res.status(404).json({
+          msg: `Not found ${error.kind} (${id})`,
+          type: typeMsg.error,
+        });
         return;
       });
   } else {
-    res.status(404).json({ msg: `Not found id (${id})` });
+    res.status(404).json({ msg: `Not found id (${id})`, type: typeMsg.error });
     return;
   }
 });
 
 router.post("/addgame", (req, res) => {
   const data = req.body || {};
-  let id = req?.query?.id;
+  let name = req?.query?.name;
 
-  if (!id) {
-    res.status(404).json({ msg: `Not found id (${id})` });
+  if (!name) {
+    res.json({ msg: `Not found id (${name})`, type: typeMsg.error });
     return;
   }
   if (!data.time || !data.date) {
-    res.status(404).json({ msg: `Not found time or date` });
+    console.log(data);
+    res.json({ msg: `Not found time or date`, type: typeMsg.error });
+    return;
+  }
+
+  Games.findOne({ owner: name })
+    .then((foundedGame) => {
+      let oldGames = foundedGame.games.slice();
+      oldGames.push(data);
+      Games.findOneAndUpdate(
+        { owner: name },
+        { games: oldGames },
+        { useFindAndModify: false }
+      )
+        .then(() => {
+          return res.json({
+            msg: "Game is added successfully!",
+            type: typeMsg.success,
+          });
+        })
+        .catch((error) => {
+          return res.status(404).json({
+            msg: `Not found ${error.kind} (${name})`,
+            type: typeMsg.error,
+          });
+        });
+    })
+    .catch((error) => {
+      console.log(error.message);
+      if (error.message === "Cannot read property 'games' of null") {
+      }
+      return res.status(404).json({
+        msg: `Not found ${error.kind} (${name})`,
+        type: typeMsg.error,
+      });
+    });
+});
+
+router.post("/addgamebyid", (req, res) => {
+  const data = req.body || {};
+  let id = req?.query?.id;
+
+  if (!id) {
+    res.status(404).json({ msg: `Not found id (${id})`, type: typeMsg.error });
+    return;
+  }
+  if (!data.time || !data.date) {
+    res
+      .status(404)
+      .json({ msg: `Not found time or date`, type: typeMsg.error });
     return;
   }
   Games.findById(id).then((foundedGame) => {
@@ -78,14 +140,65 @@ router.post("/addgame", (req, res) => {
       { useFindAndModify: false }
     )
       .then(() => {
-        res.json({ msg: "OK" });
+        res.json({ msg: "OK", type: typeMsg.success });
         return;
       })
       .catch((error) => {
-        res.status(404).json({ msg: `Not found ${error.kind} (${id})` });
+        res.status(404).json({
+          msg: `Not found ${error.kind} (${id})`,
+          type: typeMsg.error,
+        });
         return;
       });
   });
+});
+
+router.post("/cleanup", (req, res) => {
+  const data = req.body;
+
+  Games.find({ owner: "ramsess" })
+    .then((foundedGames) => {
+      let foundedGame = foundedGames[0];
+      let oldGames = foundedGame.games.slice();
+      oldGames = oldGames.filter((games) => games.time > 5);
+      let id2 = foundedGame._id;
+      Games.findByIdAndUpdate(
+        id2,
+        { games: oldGames },
+        { useFindAndModify: false }
+      )
+        .then(() => {
+          res.json({ msg: "OK", type: typeMsg.success });
+          return;
+        })
+        .catch((error) => {
+          res.status(404).json({
+            msg: `Not found ${error.kind} (${id2})`,
+            type: typeMsg.error,
+          });
+          return;
+        });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.json({ msg: "err" });
+    });
+
+  // Games.findOne({ owner: data.owner }).then((games) => {
+  //   console.log(games);
+  //   for (let game of games) {
+  //   }
+  //   res.json({ msg: "OK" });
+  // });
+
+  // Games.findOneAndDelete({ owner: data.owner })
+  //   .then((foundedGame) => {
+  //     console.log("del", foundedGame);
+  //     res.json({ msg: "Ok" });
+  //   })
+  //   .catch((error) => {
+  //     res.json({ msg: "err", error: error });
+  //   });
 });
 
 router.post("/create", (req, res) => {
@@ -95,18 +208,19 @@ router.post("/create", (req, res) => {
     const newGames = new Games(data);
     newGames.save((error) => {
       if (error) {
-        res.status(500).json({ msg: error });
+        res.status(500).json({ msg: error, type: typeMsg.error });
         return;
       }
       // Games
       return res.json({
-        msg: "Your data has been saved!!!!!!",
+        msg: "Game is added successfully!",
+        type: typeMsg.success,
       });
     });
   } else if (!data.owner) {
-    res.status(400).json({ msg: "Not found owner" });
+    res.json({ msg: "Not found owner", type: typeMsg.error });
   } else if (!data.games) {
-    res.status(400).json({ msg: "Not found games" });
+    res.json({ msg: "Not found games", type: typeMsg.error });
   }
 });
 
@@ -117,22 +231,15 @@ router.post("/save", (req, res) => {
 
   newGames.save((error) => {
     if (error) {
-      res.status(500).json({ msg: error });
+      res.status(500).json({ msg: error, type: typeMsg.error });
       return;
     }
     // Games
     return res.json({
       msg: "Your data has been saved!!!!!!",
+      type: typeMsg.success,
     });
   });
-});
-
-router.get("/name", (req, res) => {
-  const data = {
-    username: "peterson",
-    age: 5,
-  };
-  res.json(data);
 });
 
 module.exports = router;

@@ -3,14 +3,19 @@ import "../styles/Button.scss";
 import "../styles/Minesweeper.scss";
 // eslint-disable-next-line
 import Table2 from "./Table2";
+// eslint-disable-next-line
 import ExportAndImport from "./ExportAndImport";
+// eslint-disable-next-line
 import axios from "axios";
 import { notification } from "antd";
-import { useEffect, useState } from "react";
+// eslint-disable-next-line
+import { useContext, useState } from "react";
 // eslint-disable-next-line
 import Login from "./Login";
 import TopRecords from "./TopRecords";
 import LoginMini from "./LoginMini";
+import { UserContext } from "../UserContext";
+import { useEffect } from "react";
 
 export const showNotification = (
   message: string,
@@ -24,140 +29,82 @@ export const showNotification = (
   }
 };
 
+export let owner = "";
+export const changeOwner = (newName: string) => {
+  owner = newName;
+};
+
 export default function App() {
   // eslint-disable-next-line
-  const [nameForTable, setNameForTable] = useState<string[] | null>(null);
+  // const [nameForTable, setNameForTable] = useState<string>("");
 
-  useEffect(() => {
-    checkLogin();
-  }, []);
+  // const refresh = () => {
+  //   setNameForTable("");
+  // };
 
-  const getLoginUser = (): string | null => {
-    let username: string = localStorage.getItem("username") || "";
-    if (username.length > 0) {
-      return username;
-      // setNameForTable([username]);
-      // window.location.reload();
-    } else {
-      return null;
-      // setNameForTable([]);
-    }
-  };
+  // const refresh2 = (name: string) => {
+  //   setNameForTable(name);
+  // };
 
-  const checkLogin = () => {
-    let username: string = localStorage.getItem("username") || "";
-    if (username.length > 0) {
-      setNameForTable([username]);
-      // window.location.reload();
-    } else setNameForTable([]);
-  };
+  // useEffect(() => {
+  //   checkLogin();
+  // }, []);
+
+  // const getLoginUser = (): string | null => {
+  //   let username: string = nameForTable || "";
+  //   if (username.length > 0) {
+  //     return username;
+  //   } else {
+  //     return null;
+  //   }
+  // };
+
+  // const checkLogin = () => {
+  //   let username: string = localStorage.getItem("username") || "";
+  //   if (username.length > 0) {
+  //     setNameForTable(username);
+  //   } else setNameForTable("");
+  // };
+
+  // const [nameForTable, setNameForTable] = useState("rame");
+  // useEffect(() => {
+
+  //   // owner = nameForTable;
+  // }, [nameForTable]);
+
+  // const getNameForTable = () => {
+  //   // let result = "";
+  //   let result = nameForTable;
+  //   return result;
+  // };
 
   // eslint-disable-next-line
-  const testButton = () => {
-    const getGamesById = () => {
-      let ownerId = "609580eb5a5d3a17c8002231";
-      axios
-        .get(`/api?id=${ownerId}`)
-        .then((response) => {
-          // eslint-disable-next-line
-          const gamesForId = response.data.games;
-        })
-        .catch(() => {
-          alert("Error retrieving data!!!");
-        });
-    };
+  const [reload, setReload] = useState(0);
 
-    const logInUser = ({
-      username,
-      password,
-    }: {
-      username: string;
-      password: string;
-    }) => {
-      axios({
-        method: "POST",
-        data: {
-          username: username,
-          password: password,
-        },
-        withCredentials: true,
-        url: "/user/login",
+  const { user, setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    let savedUser = localStorage.getItem("username");
+    if (!user && savedUser) {
+      setUser(savedUser);
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  // eslint-disable-next-line
+  const cleanUp = () => {
+    axios({
+      method: "POST",
+      data: { owner: "ramsess" },
+      withCredentials: true,
+      url: `/api/cleanup`,
+    })
+      .then(({ data }) => {
+        console.log("ok", data);
       })
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
-    };
-
-    const getAllGames = () => {
-      axios
-        .get("/api")
-        .then((response) => {})
-        .catch((err) => {});
-    };
-
-    const getUser = () => {
-      axios({
-        method: "GET",
-        withCredentials: true,
-        url: "/user/showMyUsername",
-      })
-        .then((res) => {})
-        .catch((err) => {});
-    };
-
-    const regUser = ({
-      username,
-      password,
-    }: {
-      username: string;
-      password: string;
-    }) => {
-      axios({
-        method: "POST",
-        data: {
-          username: username,
-          password: password,
-        },
-        withCredentials: true,
-        url: "/user/register",
-      }).then((res) => console.log(res));
-    };
-
-    return (
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <ExportAndImport />
-        <button onClick={getAllGames}>gag</button>
-        <button onClick={getGamesById}>gag by id</button>
-        <button
-          onClick={() => regUser({ username: "ramsess", password: "123456" })}
-        >
-          {`reg 1`}
-        </button>
-        <button
-          onClick={() => regUser({ username: "rame", password: "123456" })}
-        >
-          {`reg 2`}
-        </button>
-        <button
-          onClick={() => logInUser({ username: "ramsess", password: "123456" })}
-        >
-          {`log 1`}
-        </button>
-        <button
-          onClick={() => logInUser({ username: "rame", password: "1123456" })}
-        >
-          {`log 2`}
-        </button>
-        <button onClick={getUser}>get user</button>
-      </div>
-    );
+      .catch((err) => {
+        console.log("err", err);
+      });
   };
 
   return (
@@ -170,10 +117,12 @@ export default function App() {
       }}
     >
       <div style={{ width: "100%", height: "100%" }}>
+        {/* <Button onClick={cleanUp}>CleanUp</Button> */}
+        {/* <Button onClick={addGame}>add game</Button> */}
         <LoginMini />
-        <Minesweeper />
+        <Minesweeper ss={setReload} setReload={setReload} reload={reload} />
         {/* <Table2 ownerName={nameForTable} /> */}
-        {getLoginUser() ? <TopRecords /> : null}
+        {true ? <TopRecords reload={reload} /> : null}
       </div>
     </div>
   );

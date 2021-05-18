@@ -22,10 +22,11 @@ export default function LoginFulPage() {
       },
       withCredentials: true,
       url: "/user/login",
-    }).then((res) => {
-      // console.log(res.data.username);
-      showNotification(`Hello ${res.data.username}`, 1, "success");
-    });
+    })
+      .then((res) => {
+        showNotification(`Hello ${res.data.username}`, 1, res.data.type);
+      })
+      .catch((err) => showNotification(err.message, 1, "error"));
   };
   return (
     <div

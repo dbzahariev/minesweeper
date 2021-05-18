@@ -1,6 +1,5 @@
 import { Button, Form, Input, Modal, Space } from "antd";
-// eslint-disable-next-line
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { showNotification } from "./App";
 
 export default function LoginMini() {
@@ -9,7 +8,6 @@ export default function LoginMini() {
 
   useEffect(() => {
     let username: string = localStorage.getItem("username") || "";
-    console.log(username);
     if (username.length > 0) {
       setIsModalVisible(false);
     } else {
@@ -25,6 +23,7 @@ export default function LoginMini() {
     const onFinish = (values: any) => {
       setLoading(true);
       localStorage.setItem("username", values.username);
+      console.log("set context");
       showNotification(`Hello ${values.username}!`, 1, "success");
       setLoading(false);
       setIsModalVisible(false);
