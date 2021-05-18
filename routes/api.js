@@ -75,13 +75,10 @@ router.post("/addgame", (req, res) => {
   let name = req?.query?.name;
 
   if (!name) {
-    res.json({ msg: `Not found id (${name})`, type: typeMsg.error });
-    return;
+    return res.json({ msg: `Not found id (${name})`, type: typeMsg.error });
   }
   if (!data.time || !data.date) {
-    console.log(data);
-    res.json({ msg: `Not found time or date`, type: typeMsg.error });
-    return;
+    return res.json({ msg: `Not found time or date`, type: typeMsg.error });
   }
 
   Games.findOne({ owner: name })
@@ -107,9 +104,6 @@ router.post("/addgame", (req, res) => {
         });
     })
     .catch((error) => {
-      console.log(error.message);
-      if (error.message === "Cannot read property 'games' of null") {
-      }
       return res.status(404).json({
         msg: `Not found ${error.kind} (${name})`,
         type: typeMsg.error,
@@ -185,7 +179,6 @@ router.post("/cleanup", (req, res) => {
     });
 
   // Games.findOne({ owner: data.owner }).then((games) => {
-  //   console.log(games);
   //   for (let game of games) {
   //   }
   //   res.json({ msg: "OK" });
@@ -193,7 +186,6 @@ router.post("/cleanup", (req, res) => {
 
   // Games.findOneAndDelete({ owner: data.owner })
   //   .then((foundedGame) => {
-  //     console.log("del", foundedGame);
   //     res.json({ msg: "Ok" });
   //   })
   //   .catch((error) => {

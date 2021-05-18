@@ -99,12 +99,8 @@ export default function App() {
       withCredentials: true,
       url: `/api/cleanup`,
     })
-      .then(({ data }) => {
-        console.log("ok", data);
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
+      .then(({ data }) => {})
+      .catch((err) => {});
   };
 
   return (

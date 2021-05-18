@@ -21,7 +21,6 @@ export default function TopRecords(props: any) {
     } | null>(null);
 
   useEffect(() => {
-    console.log("refresh");
     getAllGames();
     // eslint-disable-next-line
   }, [props.reload, user]);
@@ -51,8 +50,6 @@ export default function TopRecords(props: any) {
 
         let kk = { bestRecords, averageTime, allRecordsCount: newData.length };
 
-        console.log(kk);
-
         setStatistic(kk);
       })
       .catch((err) => {
@@ -80,6 +77,9 @@ export default function TopRecords(props: any) {
     }
     return null;
   };
+  if (user.length === 0 || statistic === null) {
+    return null;
+  }
 
   return (
     <div

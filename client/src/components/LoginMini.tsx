@@ -23,7 +23,6 @@ export default function LoginMini() {
     const onFinish = (values: any) => {
       setLoading(true);
       localStorage.setItem("username", values.username);
-      console.log("set context");
       showNotification(`Hello ${values.username}!`, 1, "success");
       setLoading(false);
       setIsModalVisible(false);
