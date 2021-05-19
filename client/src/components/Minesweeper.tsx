@@ -7,7 +7,6 @@ import Button from "./Button";
 
 import "../styles/Minesweeper.scss";
 import axios from "axios";
-// eslint-disable-next-line
 import { showNotification } from "./App";
 
 function App(props: any) {
@@ -55,6 +54,23 @@ function App(props: any) {
       };
     }
   }, [live, time]);
+
+  useEffect(() => {
+    if (hesLost) {
+      let bombs = showAllBombs();
+      setCells(bombs);
+      setFace(Face.lost);
+      setLive(false);
+    }
+    if (hesWon) {
+      let bombs = showAllNotBombs();
+      setCells(bombs);
+      setFace(Face.won);
+      setLive(false);
+      addGame();
+    }
+    // eslint-disable-next-line
+  }, [hesLost, hesWon]);
 
   const showAllBombs = useCallback((): Cell[][] => {
     let currentCells = cells.slice();
@@ -123,257 +139,71 @@ function App(props: any) {
     });
   };
 
-  useEffect(() => {
-    if (hesLost) {
-      let bombs = showAllBombs();
-      setCells(bombs);
-      setFace(Face.lost);
-      setLive(false);
-    }
-    if (hesWon) {
-      let bombs = showAllNotBombs();
-      setCells(bombs);
-      setFace(Face.won);
-      setLive(false);
-      addGame();
-      // changeOwner("ramsess");
-      // props.ss("ramsess");
-    }
-    // eslint-disable-next-line
-  }, [hesLost, hesWon]);
-
   const checkBombsAroundMe = (row: number, col: number): boolean => {
     let nFlags = 0;
-    // eslint-disable-next-line
-    let nBombs = 0;
-    let nFBombs = 0;
-    let nFBombsArr = [];
 
     for (let i = 0; i < MAX_ROWS; i++) {
       for (let j = 0; j < MAX_COLS; j++) {
-        if (i === row - 1 && j === col - 1) {
-          if (cells[i][j].state === CellState.flagged) {
-            nFlags++;
-          }
-          if (cells[i][j].value === CellValue.bomb) {
-            nBombs++;
-          }
-          if (
-            cells[i][j].value === CellValue.bomb &&
-            cells[i][j].state === CellState.flagged
-          ) {
-            nFBombsArr.push({ row: i, col: j });
-            nFBombs++;
-          }
+        if (
+          i === row - 1 &&
+          j === col - 1 &&
+          cells[i][j].state === CellState.flagged
+        ) {
+          nFlags++;
         }
-        if (i === row - 1 && j === col) {
-          if (cells[i][j].state === CellState.flagged) {
-            nFlags++;
-          }
-          if (cells[i][j].value === CellValue.bomb) {
-            nBombs++;
-          }
-          if (
-            cells[i][j].value === CellValue.bomb &&
-            cells[i][j].state === CellState.flagged
-          ) {
-            nFBombsArr.push({ row: i, col: j });
-            nFBombs++;
-          }
+        if (
+          i === row - 1 &&
+          j === col &&
+          cells[i][j].state === CellState.flagged
+        ) {
+          nFlags++;
         }
-        if (i === row - 1 && j === col + 1) {
-          if (cells[i][j].state === CellState.flagged) {
-            nFlags++;
-          }
-          if (cells[i][j].value === CellValue.bomb) {
-            nBombs++;
-          }
-          if (
-            cells[i][j].value === CellValue.bomb &&
-            cells[i][j].state === CellState.flagged
-          ) {
-            nFBombsArr.push({ row: i, col: j });
-            nFBombs++;
-          }
+        if (
+          i === row - 1 &&
+          j === col + 1 &&
+          cells[i][j].state === CellState.flagged
+        ) {
+          nFlags++;
         }
-        if (i === row && j === col - 1) {
-          if (cells[i][j].state === CellState.flagged) {
-            nFlags++;
-          }
-          if (cells[i][j].value === CellValue.bomb) {
-            nBombs++;
-          }
-          if (
-            cells[i][j].value === CellValue.bomb &&
-            cells[i][j].state === CellState.flagged
-          ) {
-            nFBombsArr.push({ row: i, col: j });
-            nFBombs++;
-          }
+        if (
+          i === row &&
+          j === col - 1 &&
+          cells[i][j].state === CellState.flagged
+        ) {
+          nFlags++;
         }
-        if (i === row && j === col + 1) {
-          if (cells[i][j].state === CellState.flagged) {
-            nFlags++;
-          }
-          if (cells[i][j].value === CellValue.bomb) {
-            nFBombsArr.push({ row: i, col: j });
-            nBombs++;
-          }
-          if (
-            cells[i][j].value === CellValue.bomb &&
-            cells[i][j].state === CellState.flagged
-          ) {
-            nFBombsArr.push({ row: i, col: j });
-            nFBombs++;
-          }
+        if (
+          i === row &&
+          j === col + 1 &&
+          cells[i][j].state === CellState.flagged
+        ) {
+          nFlags++;
         }
-        if (i === row + 1 && j === col - 1) {
-          if (cells[i][j].state === CellState.flagged) {
-            nFlags++;
-          }
-          if (cells[i][j].value === CellValue.bomb) {
-            nBombs++;
-          }
-          if (
-            cells[i][j].value === CellValue.bomb &&
-            cells[i][j].state === CellState.flagged
-          ) {
-            nFBombsArr.push({ row: i, col: j });
-            nFBombs++;
-          }
+        if (
+          i === row + 1 &&
+          j === col - 1 &&
+          cells[i][j].state === CellState.flagged
+        ) {
+          nFlags++;
         }
-        if (i === row + 1 && j === col) {
-          if (cells[i][j].state === CellState.flagged) {
-            nFlags++;
-          }
-          if (cells[i][j].value === CellValue.bomb) {
-            nBombs++;
-          }
-          if (
-            cells[i][j].value === CellValue.bomb &&
-            cells[i][j].state === CellState.flagged
-          ) {
-            nFBombsArr.push({ row: i, col: j });
-            nFBombs++;
-          }
+        if (
+          i === row + 1 &&
+          j === col &&
+          cells[i][j].state === CellState.flagged
+        ) {
+          nFlags++;
         }
-        if (i === row + 1 && j === col + 1) {
-          if (cells[i][j].state === CellState.flagged) {
-            nFlags++;
-          }
-          if (cells[i][j].value === CellValue.bomb) {
-            // eslint-disable-next-line
-            nBombs++;
-          }
-          if (
-            cells[i][j].value === CellValue.bomb &&
-            cells[i][j].state === CellState.flagged
-          ) {
-            nFBombsArr.push({ row: i, col: j });
-            nFBombs++;
-          }
+        if (
+          i === row + 1 &&
+          j === col + 1 &&
+          cells[i][j].state === CellState.flagged
+        ) {
+          nFlags++;
         }
       }
     }
 
-    // eslint-disable-next-line
-    let nBingo = 0;
-
-    let distinct: any[] = [];
-    for (let i = 0; i < nFBombsArr.length; i++) {
-      if (distinct.indexOf(nFBombsArr[i]) === -1) {
-        distinct.push(nFBombsArr[i]);
-      }
-    }
-    nFBombsArr = distinct;
-
-    nFBombsArr.forEach((el) => {
-      if (
-        el.row === row - 1 &&
-        el.col === col - 1 &&
-        cells[row - 1][col - 1].state === CellState.flagged &&
-        cells[row][col].value !== CellValue.bomb &&
-        cells[row][col].value !== CellValue.none &&
-        cells[row][col].value === nFBombs
-      ) {
-        nBingo++;
-      }
-      if (
-        el.row === row - 1 &&
-        el.col === col &&
-        cells[row - 1][col].state === CellState.flagged &&
-        cells[row][col].value !== CellValue.bomb &&
-        cells[row][col].value !== CellValue.none &&
-        cells[row][col].value === nFBombs
-      ) {
-        nBingo++;
-      }
-      if (
-        el.row === row - 1 &&
-        el.col === col + 1 &&
-        cells[row - 1][col + 1].state === CellState.flagged &&
-        cells[row][col].value !== CellValue.bomb &&
-        cells[row][col].value !== CellValue.none &&
-        cells[row][col].value === nFBombs
-      ) {
-        nBingo++;
-      }
-      if (
-        el.row === row &&
-        el.col === col + 1 &&
-        cells[row][col + 1].state === CellState.flagged &&
-        cells[row][col].value !== CellValue.bomb &&
-        cells[row][col].value !== CellValue.none &&
-        cells[row][col].value === nFBombs
-      ) {
-        nBingo++;
-      }
-      if (
-        el.row === row &&
-        el.col === col - 1 &&
-        cells[row][col - 1].state === CellState.flagged &&
-        cells[row][col].value !== CellValue.bomb &&
-        cells[row][col].value !== CellValue.none &&
-        cells[row][col].value === nFBombs
-      ) {
-        nBingo++;
-      }
-      if (
-        el.row === row + 1 &&
-        el.col === col - 1 &&
-        cells[row + 1][col - 1].state === CellState.flagged &&
-        cells[row][col].value !== CellValue.bomb &&
-        cells[row][col].value !== CellValue.none &&
-        cells[row][col].value === nFBombs
-      ) {
-        nBingo++;
-      }
-      if (
-        el.row === row + 1 &&
-        el.col === col &&
-        cells[row + 1][col].state === CellState.flagged &&
-        cells[row][col].value !== CellValue.bomb &&
-        cells[row][col].value !== CellValue.none &&
-        cells[row][col].value === nFBombs
-      ) {
-        nBingo++;
-      }
-      if (
-        el.row === row + 1 &&
-        el.col === col + 1 &&
-        cells[row + 1][col + 1].state === CellState.flagged &&
-        cells[row][col].value !== CellValue.bomb &&
-        cells[row][col].value !== CellValue.none &&
-        cells[row][col].value === nFBombs
-      ) {
-        // eslint-disable-next-line
-        nBingo++;
-      }
-    });
-
-    let res = nFlags === cells[row][col].value;
-
-    return res;
+    return nFlags === cells[row][col].value;
   };
 
   const setVisibleAroundMe = (row: number, col: number): Cell[][] => {
@@ -456,14 +286,6 @@ function App(props: any) {
 
       let newCells: Cell[][] = cells.slice();
       if (!live) {
-        // let isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
-        // if (isBomb) {
-        //   newCells = gg(rowParam, colParam).slice();
-        // }
-        // while (isBomb) {
-        //   newCells = generateCells();
-        //   isBomb = newCells[rowParam][colParam].value === CellValue.bomb;
-        // }
         setLive(true);
       }
 
@@ -478,13 +300,9 @@ function App(props: any) {
         newCells[rowParam][colParam].red = true;
         newCells[rowParam][colParam].state = CellState.visible;
         newCells = showAllBombs();
-
-        setCells(newCells);
-        return;
       } else if (currentCell.value === CellValue.none) {
         newCells = openMultipleCells(cells, rowParam, colParam);
       } else {
-        // Click on a number
         newCells[rowParam][colParam].state = CellState.visible;
       }
       if (checkWin()) {
@@ -573,6 +391,16 @@ function App(props: any) {
     // eslint-disable-next-line
   }, [bombCounter, cells]);
 
+  const handleFaceClick = (): void => {
+    setLive(false);
+    setTime(0);
+    setBombCounter(NO_OF_BOMBS);
+    setCells(generateCells());
+    setHesLost(false);
+    setHesWon(false);
+    setFace(Face.smile);
+  };
+
   const renderCells = (): React.ReactNode => {
     return cells.map((row, rowIndex) =>
       row.map((cell, cellIndex) => {
@@ -592,16 +420,6 @@ function App(props: any) {
         );
       })
     );
-  };
-
-  const handleFaceClick = (): void => {
-    setLive(false);
-    setTime(0);
-    setBombCounter(NO_OF_BOMBS);
-    setCells(generateCells());
-    setHesLost(false);
-    setHesWon(false);
-    setFace(Face.smile);
   };
 
   return (

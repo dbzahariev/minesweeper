@@ -7,7 +7,6 @@ import Table2 from "./Table2";
 const { TabPane } = Tabs;
 
 export default function TopRecords(props: any) {
-  // let ownerName = localStorage.getItem("username") || "";
   const { user } = useContext(UserContext);
 
   const [statistic, setStatistic] =

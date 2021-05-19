@@ -158,11 +158,6 @@ function Table2({
       }}
     >
       <Table
-        style={
-          {
-            // backgroundColor: "red",
-          }
-        }
         title={() => (
           <Space style={{ width: "100%" }} align="center" direction="vertical">
             <Typography.Text>Records</Typography.Text>

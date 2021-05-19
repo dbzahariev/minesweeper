@@ -36,7 +36,6 @@ export default function LoginMini() {
         name="basic"
         initialValues={{
           remember: true,
-          // username: "ramsess",
         }}
         onFinish={onFinish}
       >

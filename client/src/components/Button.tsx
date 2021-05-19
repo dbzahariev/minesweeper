@@ -1,4 +1,3 @@
-// eslint-disable-next-line
 import React, { useState, useEffect } from "react";
 import { CellState, CellValue } from "../assistants/Types";
 import "../styles/Button.scss";
@@ -46,7 +45,6 @@ function Button({
         />
       );
     }
-    // eslint-disable-next-line
     if (
       value !== CellValue.bomb &&
       value !== CellValue.none &&
