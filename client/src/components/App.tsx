@@ -2,11 +2,15 @@ import Minesweeper from "./Minesweeper";
 import "../styles/Button.scss";
 import "../styles/Minesweeper.scss";
 import { notification } from "antd";
+// eslint-disable-next-line
 import { useContext, useState } from "react";
 import TopRecords from "./TopRecords";
 import LoginMini from "./LoginMini";
+// eslint-disable-next-line
 import { UserContext } from "../UserContext";
+// eslint-disable-next-line
 import { useEffect } from "react";
+import Settings from "./Settings";
 
 export const showNotification = (
   message: string,
@@ -23,14 +27,14 @@ export const showNotification = (
 export default function App() {
   const [reload, setReload] = useState(0);
 
-  const { user, setUser } = useContext(UserContext);
+  // const { user, setUser } = useContext(UserContext);
 
-  useEffect(() => {
-    let savedUser = localStorage.getItem("username");
-    if (!user && savedUser) {
-      setUser(savedUser);
-    }
-  }, [user, setUser]);
+  // useEffect(() => {
+  //   let savedUser = localStorage.getItem("username");
+  //   if (!user && savedUser) {
+  //     setUser(savedUser);
+  //   }
+  // }, [user, setUser]);
 
   return (
     <div
@@ -42,6 +46,7 @@ export default function App() {
       }}
     >
       <div style={{ width: "100%", height: "100%" }}>
+        <Settings />
         <LoginMini />
         <Minesweeper ss={setReload} setReload={setReload} reload={reload} />
         <TopRecords reload={reload} />

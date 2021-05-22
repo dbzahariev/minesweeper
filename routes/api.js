@@ -39,6 +39,66 @@ let typeMsg = {
   warning: "warning",
 };
 
+router.post("/settings", (req, res) => {
+  const data = req.body || {};
+  let name = req?.query?.name;
+  let settings = data.settings;
+
+  Games.findOneAndUpdate(
+    { owner: name },
+    { settings: settings },
+    { useFindAndModify: false }
+  )
+    .then((games) => {
+      res.json({
+        msg: "Settings is saved successfully!",
+        type: typeMsg.success,
+      });
+    })
+    .catch((err) => {
+      res.status(500);
+    });
+
+  // Games.findByIdAndUpdate(id, data, { useFindAndModify: false });
+  //     .then((data2) => {
+  //       res.json({ msg: "OK", type: typeMsg.success });
+  //       return;
+  //     })
+  //     .catch((error) => {
+  //       res.status(404).json({
+  //         msg: `Not found ${error.kind} (${id})`,
+  //         type: typeMsg.error,
+  //       });
+  //       return;
+  //     });
+
+  // if (!id) {
+  //   res.status(404).json({ msg: `Not found id (${id})`, type: typeMsg.error });
+  //   return;
+  // }
+  // if (!data.owner && !data.games) {
+  //   res.status(404).json({ msg: `Not found body`, type: typeMsg.error });
+  //   return;
+  // }
+  // if (id) {
+  //   Games.findByIdAndUpdate(id, data, { useFindAndModify: false })
+  //     .then((data2) => {
+  //       res.json({ msg: "OK", type: typeMsg.success });
+  //       return;
+  //     })
+  //     .catch((error) => {
+  //       res.status(404).json({
+  //         msg: `Not found ${error.kind} (${id})`,
+  //         type: typeMsg.error,
+  //       });
+  //       return;
+  //     });
+  // } else {
+  //   res.status(404).json({ msg: `Not found id (${id})`, type: typeMsg.error });
+  //   return;
+  // }
+});
+
 router.post("/update", (req, res) => {
   const data = req.body || {};
   let id = req?.query?.id;

@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Space, Table, Typography } from "antd";
 import axios from "axios";
 import { ColumnsType } from "antd/lib/table";
+import { UserContext } from "../UserContext";
 
 type masterType = { time: number; date: string; owner: string };
 
@@ -33,6 +34,9 @@ function Table2({
   const [filterFields, setFilterFields] = useState<FilterFieldsType[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortTime, setSortTime] = useState<"descend" | "ascend" | null>(null);
+
+  // eslint-disable-next-line
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     getAllGames();
@@ -110,7 +114,7 @@ function Table2({
   };
 
   const getLoginUser = () => {
-    let username: string = localStorage.getItem("username") || "";
+    let username: string = user || "";
     if (username) return [username];
     else return null;
   };

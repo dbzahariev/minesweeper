@@ -1,18 +1,22 @@
 import { Button, Form, Input, Modal, Space } from "antd";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../UserContext";
 import { showNotification } from "./App";
 
 export default function LoginMini() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const { user, setUser } = useContext(UserContext);
+
   useEffect(() => {
-    let username: string = localStorage.getItem("username") || "";
+    let username: string = user || "";
     if (username.length > 0) {
       setIsModalVisible(false);
     } else {
       setIsModalVisible(true);
     }
+    // eslint-disable-next-line
   }, []);
 
   const formChancel = () => {
@@ -22,6 +26,7 @@ export default function LoginMini() {
   const getForm = () => {
     const onFinish = (values: any) => {
       setLoading(true);
+      setUser(values.username);
       localStorage.setItem("username", values.username);
       showNotification(`Hello ${values.username}!`, 1, "success");
       setLoading(false);
