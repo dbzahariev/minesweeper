@@ -1,20 +1,31 @@
-import React from "react";
-
+import { useReducer, useState } from "react";
 import "./App.css";
-
 import AppDev from "./components/App";
-import UserContext from "./UserContext";
+import { reducer } from "./assistants/Redux";
 
-class App extends React.Component {
-  render() {
-    return (
-      <div className="App">
-        <UserContext>
-          <AppDev />
-        </UserContext>
-      </div>
-    );
-  }
+function App() {
+  const [todos, dispatch] = useReducer(
+    reducer,
+    JSON.parse(localStorage.getItem("todos")) || []
+  );
+
+  const [username, setUsername] = useState(
+    localStorage.getItem("username") || ""
+  );
+
+  // const [games, setGames] = useState([]);
+
+  return (
+    <div className="App">
+      <AppDev
+        redux={{
+          todos,
+          dispatch,
+          user: { username, setUsername },
+        }}
+      />
+    </div>
+  );
 }
 
 export default App;

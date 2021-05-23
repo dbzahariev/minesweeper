@@ -1,7 +1,7 @@
 import { Button, Form, Input, Modal, Radio, Space, Table } from "antd";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../UserContext";
+import { useEffect, useState } from "react";
+import { ACTIONS, TypeRedux } from "../assistants/Redux";
 import { showNotification } from "./App";
 
 const defaultSettingsForTable = {
@@ -27,7 +27,7 @@ const defaultSettingsForTable = {
   },
 };
 
-export default function Settings(props: any) {
+export default function Settings({ redux }: { redux: TypeRedux }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   // eslint-disable-next-line
@@ -36,8 +36,18 @@ export default function Settings(props: any) {
     col: 9,
     type: "beginner",
   });
-  // eslint-disable-next-line
-  const { user, setUser } = useContext(UserContext);
+
+  const user = localStorage.getItem("username") || "";
+
+  useEffect(() => {
+    let kk = redux.todos.find((el) => el.username === user);
+    if (kk === undefined && user.length > 0) {
+      redux.dispatch({
+        type: ACTIONS.ADD_TODO,
+        payload: { username: user },
+      });
+    }
+  }, [redux, user]);
 
   const [localSettings, setLocalSettings] = useState<{
     customSettings: {
@@ -52,11 +62,11 @@ export default function Settings(props: any) {
   });
 
   useEffect(() => {
-    if (user.length > 0) {
-      setIsModalVisible(false);
-    } else {
-      setIsModalVisible(true);
-    }
+    // if (user.length > 0) {
+    //   setIsModalVisible(false);
+    // } else {
+    //   setIsModalVisible(true);
+    // }
     // eslint-disable-next-line
   }, []);
 
@@ -94,7 +104,11 @@ export default function Settings(props: any) {
           })
             .then((res) => {
               showNotification(res.data.msg, 1, res.data.type);
-              props.setReload(props.reload + 1);
+              redux.dispatch({
+                type: ACTIONS.SET_SETTINGS,
+                payload: { username: user, settings: newSettings },
+              });
+              // props.setReload(props.reload + 1);
             })
             .catch((err) => console.error(err));
         }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Cell, CellState, CellValue, Face } from "../assistants/Types";
 import { generateCells, openMultipleCells } from "../assistants/Utils";
 import { MAX_COLS, MAX_ROWS, NO_OF_BOMBS } from "../assistants/Constants";
@@ -8,10 +8,18 @@ import Button from "./Button";
 import "../styles/Minesweeper.scss";
 import axios from "axios";
 import { showNotification } from "./App";
-import { UserContext } from "../UserContext";
+import { TypeRedux } from "../assistants/Redux";
 
-function App(props: any) {
-  const [cells, setCells] = useState<Cell[][]>(generateCells());
+function App({
+  redux,
+  reload,
+  setReload,
+}: {
+  redux: TypeRedux;
+  reload: number;
+  setReload: Function;
+}) {
+  const [cells, setCells] = useState<Cell[][]>([]);
   const [face, setFace] = useState<Face>(Face.smile);
   const [time, setTime] = useState<number>(0);
   const [live, setLive] = useState<boolean>(false);
@@ -19,7 +27,11 @@ function App(props: any) {
   const [hesLost, setHesLost] = useState<boolean>(false);
   const [hesWon, setHesWon] = useState<boolean>(false);
 
-  const { user, setUser } = useContext(UserContext);
+  useEffect(() => {
+    setCells(generateCells());
+    setBombCounter(NO_OF_BOMBS);
+    // eslint-disable-next-line
+  }, [redux, MAX_COLS, NO_OF_BOMBS, MAX_COLS]);
 
   useEffect(() => {
     const handleMouseDownAndUp = (e: any): void => {
@@ -107,7 +119,7 @@ function App(props: any) {
   const addGame = () => {
     let date = new Date().toISOString();
     let gameData = { time: time || 1, date: date };
-    let username = user || "";
+    let username = redux.user.username;
 
     axios.get("/api").then((response) => {
       let found =
@@ -117,11 +129,11 @@ function App(props: any) {
           method: "POST",
           data: gameData,
           withCredentials: true,
-          url: `/api/addgame?name=${user}`,
+          url: `/api/addgame?name=${username}`,
         })
           .then((res) => {
             showNotification(res.data.msg, 1, res.data.type);
-            props.setReload(props.reload + 1);
+            setReload(reload + 1);
           })
           .catch((err) => console.error(err));
       } else {
@@ -133,10 +145,7 @@ function App(props: any) {
         })
           .then((res) => {
             showNotification(res.data.msg, 1, res.data.type);
-
-            setUser(username);
-            localStorage.setItem("username", username);
-            props.setReload(props.reload + 1);
+            setReload(reload + 1);
           })
           .catch((err) => console.error(err));
       }

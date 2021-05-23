@@ -3,14 +3,12 @@ import "../styles/Button.scss";
 import "../styles/Minesweeper.scss";
 import { notification } from "antd";
 // eslint-disable-next-line
-import { useContext, useState } from "react";
-import TopRecords from "./TopRecords";
+import { useEffect, useState } from "react";
 import LoginMini from "./LoginMini";
-// eslint-disable-next-line
-import { UserContext } from "../UserContext";
-// eslint-disable-next-line
-import { useEffect } from "react";
 import Settings from "./Settings";
+import { TypeRedux } from "../assistants/Redux";
+import { ChangeCost, MAX_ROWS } from "../assistants/Constants";
+import TopRecords from "./TopRecords";
 
 export const showNotification = (
   message: string,
@@ -24,17 +22,46 @@ export const showNotification = (
   }
 };
 
-export default function App() {
+export const updateRows = (redux: TypeRedux) => {
+  let kk: { height: number; width: number; mines: number } = JSON.parse(
+    redux.todos.find((el) => el.username === redux.user.username)?.settings ||
+      `{"height":9,"width":9,"mines":11}`
+  );
+  let newSett: { rows: number; cols: number; bombs: number } = {
+    rows: kk.height,
+    cols: kk.width,
+    bombs: kk.mines,
+  };
+
+  ChangeCost(newSett.rows, newSett.cols, newSett.bombs);
+};
+
+export default function App({ redux }: { redux: TypeRedux }) {
   const [reload, setReload] = useState(0);
+  useEffect(() => {
+    console.log("app.tsx", redux);
+  }, [redux]);
 
-  // const { user, setUser } = useContext(UserContext);
+  useEffect(() => {
+    if (redux.user.username.length > 0) {
+      updateRows(redux);
+      setReload(reload + 1);
+    }
+    // eslint-disable-next-line
+  }, [redux.todos.find((el) => el.username === redux.user.username)?.settings]);
 
+  // if (MAX_ROWS === -1 && redux.user.username.length > 0) {
+  //   let oldRows = MAX_ROWS;
+  //   updateRows(redux);
+  //   let newRows = MAX_ROWS;
+  // }
+
+  // if (MAX_ROWS === -1 && redux.user.username) {
+  // updateRows(redux);
+  // }
   // useEffect(() => {
-  //   let savedUser = localStorage.getItem("username");
-  //   if (!user && savedUser) {
-  //     setUser(savedUser);
-  //   }
-  // }, [user, setUser]);
+  //   // eslint-disable-next-line
+  // }, [redux.todos.find((el) => el.username === redux.user.username)?.settings]);
 
   return (
     <div
@@ -46,10 +73,22 @@ export default function App() {
       }}
     >
       <div style={{ width: "100%", height: "100%" }}>
-        <Settings />
-        <LoginMini />
-        <Minesweeper ss={setReload} setReload={setReload} reload={reload} />
-        <TopRecords reload={reload} />
+        <LoginMini redux={redux} />
+        {redux.user.username.length > 0 ? (
+          <>
+            <Settings redux={redux} />
+            {MAX_ROWS !== -1 ? (
+              <Minesweeper
+                redux={redux}
+                reload={reload}
+                setReload={setReload}
+              />
+            ) : null}
+            <TopRecords redux={redux} reload={reload} />
+          </>
+        ) : (
+          <div style={{ width: "97vw", height: "91vh" }}></div>
+        )}
       </div>
     </div>
   );

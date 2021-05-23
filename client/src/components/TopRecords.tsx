@@ -1,13 +1,21 @@
 import { Space, Tabs, Typography } from "antd";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../UserContext";
+import { useEffect, useState } from "react";
+import { TypeRedux } from "../assistants/Redux";
 import Table2 from "./Table2";
 
 const { TabPane } = Tabs;
 
-export default function TopRecords(props: any) {
-  const { user } = useContext(UserContext);
+export default function TopRecords({
+  redux,
+  reload,
+}: {
+  redux: TypeRedux;
+  reload: number;
+}) {
+  // const { user } = useContext(UserContext);
+
+  const user = redux.user.username;
 
   const [statistic, setStatistic] =
     useState<{
@@ -22,9 +30,10 @@ export default function TopRecords(props: any) {
   useEffect(() => {
     getAllGames();
     // eslint-disable-next-line
-  }, [props.reload, user]);
+  }, [reload, user, redux]);
 
   const getAllGames = () => {
+    console.log("Get games");
     if (!user) {
       return null;
     }
@@ -94,7 +103,8 @@ export default function TopRecords(props: any) {
           </div>
         </TabPane>
         <TabPane tab="Whole table" key="2">
-          <Table2 ownerName={user ? [user] : null} reload={props.reload} />
+          {/* <Table2 ownerName={user ? [user] : null} reload={props.reload} /> */}
+          <Table2 ownerName={user ? [user] : null} reload={reload} />
         </TabPane>
       </Tabs>
     </div>

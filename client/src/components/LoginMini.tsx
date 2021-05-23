@@ -1,17 +1,26 @@
 import { Button, Form, Input, Modal, Space } from "antd";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../UserContext";
+import { useEffect, useState } from "react";
+import { ACTIONS, TypeRedux } from "../assistants/Redux";
 import { showNotification } from "./App";
 
-export default function LoginMini() {
+export default function LoginMini({ redux }: { redux: TypeRedux }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const { user, setUser } = useContext(UserContext);
+  let user = redux.user.username;
+  // const [user, setUser] = useState(localStorage.getItem("username") || "");
 
   useEffect(() => {
-    let username: string = user || "";
-    if (username.length > 0) {
+    let kk = redux.todos.find((el) => el.username === user);
+    if (kk === undefined && user.length > 0) {
+      redux.dispatch({
+        type: ACTIONS.ADD_TODO,
+        payload: { username: user },
+      });
+    }
+  }, [redux, user]);
+
+  useEffect(() => {
+    if (user.length > 0) {
       setIsModalVisible(false);
     } else {
       setIsModalVisible(true);
@@ -25,10 +34,12 @@ export default function LoginMini() {
 
   const getForm = () => {
     const onFinish = (values: any) => {
+      let username: string = values.username;
       setLoading(true);
-      setUser(values.username);
-      localStorage.setItem("username", values.username);
-      showNotification(`Hello ${values.username}!`, 1, "success");
+      redux.user.setUsername(username);
+      // setUser(username);
+      localStorage.setItem("username", username);
+      showNotification(`Hello ${username}!`, 1, "success");
       setLoading(false);
       setIsModalVisible(false);
       window.location.reload();
