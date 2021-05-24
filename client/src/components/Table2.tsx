@@ -37,11 +37,8 @@ function Table2({
   const [loading, setLoading] = useState(true);
   const [sortType, setSortType] = useState<"descend" | "ascend" | null>(null);
 
-  // eslint-disable-next-line
-
   useEffect(() => {
     getAllGames();
-    // eslint-disable-next-line
   }, [reload, ownerName]);
 
   const getAllGames = () => {

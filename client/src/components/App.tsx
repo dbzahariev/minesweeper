@@ -2,7 +2,6 @@ import Minesweeper from "./Minesweeper";
 import "../styles/Button.scss";
 import "../styles/Minesweeper.scss";
 import { notification, Space } from "antd";
-// eslint-disable-next-line
 import { useEffect, useState } from "react";
 import LoginMini from "./LoginMini";
 import Settings from "./Settings";
@@ -38,9 +37,6 @@ export const updateRows = (redux: TypeRedux) => {
 
 export default function App({ redux }: { redux: TypeRedux }) {
   const [reload, setReload] = useState(0);
-  useEffect(() => {
-    console.log("app.tsx", redux);
-  }, [redux]);
 
   useEffect(() => {
     if (redux.user.username.length > 0) {

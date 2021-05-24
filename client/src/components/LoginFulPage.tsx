@@ -8,8 +8,6 @@ export default function LoginFulPage() {
   let username = "";
   let password = "";
 
-  // eslint-disable-next-line
-  const [loading, setLoading] = useState(false);
   const [loginOrRegister, setLoginOrRegister] =
     useState<"Login" | "Register">("Login");
 
@@ -125,7 +123,7 @@ export default function LoginFulPage() {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 24 }}>
-              <Button loading={loading} type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit">
                 Submit
               </Button>
             </Form.Item>

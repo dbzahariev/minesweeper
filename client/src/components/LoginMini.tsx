@@ -30,8 +30,7 @@ export default function LoginMini({ redux }: { redux: TypeRedux }) {
     } else {
       setIsModalVisible(true);
     }
-    // eslint-disable-next-line
-  }, []);
+  }, [user.length]);
 
   const formChancel = () => {
     setIsModalVisible(false);

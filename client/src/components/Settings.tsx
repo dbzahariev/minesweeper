@@ -1,6 +1,6 @@
-import { Button, Form, Input, Modal, Radio, Space, Table } from "antd";
+import { Button, Form, Input, Modal, Space, Table } from "antd";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ACTIONS, TypeRedux } from "../assistants/Redux";
 import { showNotification } from "./App";
 
@@ -30,12 +30,6 @@ const defaultSettingsForTable = {
 export default function Settings({ redux }: { redux: TypeRedux }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  // eslint-disable-next-line
-  const [valueSize, setValueSize] = useState({
-    row: 9,
-    col: 9,
-    type: "beginner",
-  });
 
   const user = localStorage.getItem("username") || "";
 
@@ -60,15 +54,6 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
     customSettings: defaultSettingsForTable.custom,
     selectedRowKeys: [],
   });
-
-  useEffect(() => {
-    // if (user.length > 0) {
-    //   setIsModalVisible(false);
-    // } else {
-    //   setIsModalVisible(true);
-    // }
-    // eslint-disable-next-line
-  }, []);
 
   const saveSettings = () => {
     axios({
@@ -112,299 +97,20 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
             .catch((err) => console.error(err));
         }
       })
-      .catch((err) => {});
+      .catch((err) => console.error(err));
   };
 
   const formChancel = () => {
     setIsModalVisible(false);
-    saveSettings();
   };
 
+  // eslint-disable-next-line
   const getForm = () => {
-    const onFinish = (values: any) => {
+    const onFinish = () => {
       setLoading(true);
       saveSettings();
-      // localStorage.setItem("username", values.username);
-      // showNotification(`Hello ${values.username}!`, 1, "success");
       setLoading(false);
       setIsModalVisible(false);
-      // window.location.reload();
-    };
-
-    // eslint-disable-next-line
-    const fieldNumber = [
-      {
-        required: true,
-        // message: "This field is required",
-      },
-    ];
-    const onChangeSize = (foo1: any) => {
-      setValueSize({ ...valueSize, type: foo1.target.value });
-    };
-
-    const formInputs = () => {
-      return (
-        <Form layout="inline">
-          <Space direction="horizontal">
-            <Form.Item
-              label="Width"
-              name="width"
-              style={{
-                border: "1px solid red",
-              }}
-            >
-              <Input maxLength={2} />
-            </Form.Item>
-            <Form.Item
-              label="Height"
-              name="height"
-              style={{
-                border: "1px solid red",
-              }}
-            >
-              <Input maxLength={2} />
-            </Form.Item>
-            <Form.Item
-              label="Bombs"
-              name="bombs"
-              style={{
-                border: "1px solid red",
-              }}
-            >
-              <Input maxLength={2} />
-            </Form.Item>
-          </Space>
-        </Form>
-      );
-    };
-
-    // eslint-disable-next-line
-    const typeGameRadio = () => {
-      return (
-        <>
-          <Radio.Group onChange={onChangeSize} value={valueSize.type}>
-            <Radio value="beginner">Beginner</Radio>
-            <Radio value="medium">Intermediate</Radio>
-            <Radio value="hard">Expert</Radio>
-            <Radio value="custom">Custom</Radio>
-          </Radio.Group>
-          {formInputs()}
-        </>
-      );
-    };
-
-    const typeGameTable = () => {
-      const onChange2 = (type: string, index: number, value: any) => {
-        let newCustomSettings = {
-          ...localSettings.customSettings,
-          [type]: Number(value),
-        };
-        setLocalSettings({
-          ...localSettings,
-          customSettings: newCustomSettings,
-        });
-      };
-
-      interface DataType {
-        key: React.Key;
-        type: string;
-        height: number;
-        width: number;
-        mines: number;
-      }
-
-      const columns = [
-        {
-          title: "Type",
-          dataIndex: "type",
-          render: (text: string, row: any, index: any) => {
-            return (
-              <p
-                onClick={() => {
-                  setLocalSettings({
-                    ...localSettings,
-                    selectedRowKeys: [row.key],
-                  });
-                }}
-                style={{
-                  fontWeight: index !== data.length - 1 ? "bold" : "normal",
-                  padding: 0,
-                  margin: 0,
-                  cursor: "pointer",
-                }}
-              >
-                {text}
-              </p>
-            );
-          },
-        },
-        {
-          title: "Height",
-          dataIndex: "height",
-          render: (text: string, row: any, index: any) => {
-            if (index === data.length - 1) {
-              return (
-                <Input
-                  className="height-index-3"
-                  onChange={(r1) => {
-                    let classNames: string[] = r1.target.className
-                      .toString()
-                      .split(" ")[1]
-                      .split("-");
-                    let index = Number(classNames[2]);
-                    let type = classNames[0];
-                    let value = r1.target.value;
-                    onChange2(type, index, value);
-                    setLocalSettings({
-                      ...localSettings,
-                      selectedRowKeys: [row.key],
-                      customSettings: {
-                        ...localSettings.customSettings,
-                        [type]: Number(value),
-                      },
-                    });
-                  }}
-                  maxLength={3}
-                  defaultValue={row.height}
-                />
-              );
-            } else {
-              return text;
-            }
-          },
-        },
-        {
-          title: "Width",
-          dataIndex: "width",
-          render: (text: string, row: any, index: any) => {
-            if (index === data.length - 1) {
-              return (
-                <Input
-                  className="width-index-3"
-                  onChange={(r1) => {
-                    let classNames: string[] = r1.target.className
-                      .toString()
-                      .split(" ")[1]
-                      .split("-");
-                    let index = Number(classNames[2]);
-                    let type = classNames[0];
-                    let value = r1.target.value;
-                    onChange2(type, index, value);
-                    setLocalSettings({
-                      ...localSettings,
-                      selectedRowKeys: [row.key],
-                      customSettings: {
-                        ...localSettings.customSettings,
-                        [type]: Number(value),
-                      },
-                    });
-                  }}
-                  maxLength={3}
-                  defaultValue={row.width}
-                />
-              );
-            }
-            return text;
-          },
-        },
-        {
-          title: "Mines",
-          dataIndex: "mines",
-          render: (text: string, row: any, index: any) => {
-            if (index === data.length - 1) {
-              return (
-                <Input
-                  className="mines-index-3"
-                  onChange={(r1) => {
-                    let classNames: string[] = r1.target.className
-                      .toString()
-                      .split(" ")[1]
-                      .split("-");
-                    let index = Number(classNames[2]);
-                    let type = classNames[0];
-                    let value = r1.target.value;
-                    onChange2(type, index, value);
-                    setLocalSettings({
-                      ...localSettings,
-                      selectedRowKeys: [row.key],
-                      customSettings: {
-                        ...localSettings.customSettings,
-                        [type]: Number(value),
-                      },
-                    });
-                  }}
-                  maxLength={3}
-                  defaultValue={row.mines}
-                />
-              );
-            }
-            return text;
-          },
-        },
-      ];
-
-      const data: DataType[] = [
-        {
-          key: "1",
-          type: "Beginner",
-          height: defaultSettingsForTable.beginner.height,
-          width: defaultSettingsForTable.beginner.width,
-          mines: defaultSettingsForTable.beginner.mines,
-        },
-        {
-          key: "2",
-          type: "Intermediate",
-          height: defaultSettingsForTable.intermediate.height,
-          width: defaultSettingsForTable.intermediate.width,
-          mines: defaultSettingsForTable.intermediate.mines,
-        },
-        {
-          key: "3",
-          type: "Expert",
-          height: defaultSettingsForTable.expert.height,
-          width: defaultSettingsForTable.expert.width,
-          mines: defaultSettingsForTable.expert.mines,
-        },
-        {
-          key: "4",
-          type: "Custom",
-          height: defaultSettingsForTable.custom.height,
-          width: defaultSettingsForTable.custom.width,
-          mines: defaultSettingsForTable.custom.mines,
-        },
-      ];
-
-      const rowSelection = (
-        selectedRowKeys: React.Key[],
-        selectedRows: DataType[]
-      ) => {
-        setLocalSettings({
-          ...localSettings,
-          selectedRowKeys: selectedRowKeys,
-        });
-      };
-
-      return (
-        <div>
-          <Table
-            bordered
-            pagination={false}
-            rowSelection={{
-              type: "radio",
-              selectedRowKeys: localSettings.selectedRowKeys,
-              onChange: rowSelection,
-              getCheckboxProps: (record: DataType) => {
-                return {
-                  disabled: record.type === "Disabled User", // Column configuration not to be checked
-                  name: record.type,
-                };
-              },
-            }}
-            columns={columns}
-            dataSource={data}
-          />
-        </div>
-      );
     };
 
     return (
@@ -424,10 +130,6 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
           {typeGameTable()}
         </Form.Item>
 
-        <Form.Item label="Username" name="username">
-          <Input />
-        </Form.Item>
-
         <Form.Item wrapperCol={{ offset: 9, span: 24 }}>
           <Space>
             <Button loading={loading} type="primary" htmlType="submit">
@@ -443,25 +145,243 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
     );
   };
 
+  const typeGameTable = () => {
+    const onChange2 = (type: string, index: number, value: any) => {
+      let newCustomSettings = {
+        ...localSettings.customSettings,
+        [type]: Number(value),
+      };
+      setLocalSettings({
+        ...localSettings,
+        customSettings: newCustomSettings,
+      });
+    };
+
+    interface DataType {
+      key: React.Key;
+      type: string;
+      height: number;
+      width: number;
+      mines: number;
+    }
+
+    const columns = [
+      {
+        title: "Type",
+        dataIndex: "type",
+        render: (text: string, row: any, index: any) => {
+          return (
+            <p
+              onClick={() => {
+                setLocalSettings({
+                  ...localSettings,
+                  selectedRowKeys: [row.key],
+                });
+              }}
+              style={{
+                fontWeight: index !== data.length - 1 ? "bold" : "normal",
+                padding: 0,
+                margin: 0,
+                cursor: "pointer",
+              }}
+            >
+              {text}
+            </p>
+          );
+        },
+      },
+      {
+        title: "Height",
+        dataIndex: "height",
+        render: (text: string, row: any, index: any) => {
+          if (index === data.length - 1) {
+            return (
+              <Input
+                className="height-index-3"
+                onChange={(r1) => {
+                  let classNames: string[] = r1.target.className
+                    .toString()
+                    .split(" ")[1]
+                    .split("-");
+                  let index = Number(classNames[2]);
+                  let type = classNames[0];
+                  let value = r1.target.value;
+                  onChange2(type, index, value);
+                  setLocalSettings({
+                    ...localSettings,
+                    selectedRowKeys: [row.key],
+                    customSettings: {
+                      ...localSettings.customSettings,
+                      [type]: Number(value),
+                    },
+                  });
+                }}
+                maxLength={3}
+                defaultValue={row.height}
+              />
+            );
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: "Width",
+        dataIndex: "width",
+        render: (text: string, row: any, index: any) => {
+          if (index === data.length - 1) {
+            return (
+              <Input
+                className="width-index-3"
+                onChange={(r1) => {
+                  let classNames: string[] = r1.target.className
+                    .toString()
+                    .split(" ")[1]
+                    .split("-");
+                  let index = Number(classNames[2]);
+                  let type = classNames[0];
+                  let value = r1.target.value;
+                  onChange2(type, index, value);
+                  setLocalSettings({
+                    ...localSettings,
+                    selectedRowKeys: [row.key],
+                    customSettings: {
+                      ...localSettings.customSettings,
+                      [type]: Number(value),
+                    },
+                  });
+                }}
+                maxLength={3}
+                defaultValue={row.width}
+              />
+            );
+          }
+          return text;
+        },
+      },
+      {
+        title: "Mines",
+        dataIndex: "mines",
+        render: (text: string, row: any, index: any) => {
+          if (index === data.length - 1) {
+            return (
+              <Input
+                className="mines-index-3"
+                onChange={(r1) => {
+                  let classNames: string[] = r1.target.className
+                    .toString()
+                    .split(" ")[1]
+                    .split("-");
+                  let index = Number(classNames[2]);
+                  let type = classNames[0];
+                  let value = r1.target.value;
+                  onChange2(type, index, value);
+                  setLocalSettings({
+                    ...localSettings,
+                    selectedRowKeys: [row.key],
+                    customSettings: {
+                      ...localSettings.customSettings,
+                      [type]: Number(value),
+                    },
+                  });
+                }}
+                maxLength={3}
+                defaultValue={row.mines}
+              />
+            );
+          }
+          return text;
+        },
+      },
+    ];
+
+    const data: DataType[] = [
+      {
+        key: "1",
+        type: "Beginner",
+        height: defaultSettingsForTable.beginner.height,
+        width: defaultSettingsForTable.beginner.width,
+        mines: defaultSettingsForTable.beginner.mines,
+      },
+      {
+        key: "2",
+        type: "Intermediate",
+        height: defaultSettingsForTable.intermediate.height,
+        width: defaultSettingsForTable.intermediate.width,
+        mines: defaultSettingsForTable.intermediate.mines,
+      },
+      {
+        key: "3",
+        type: "Expert",
+        height: defaultSettingsForTable.expert.height,
+        width: defaultSettingsForTable.expert.width,
+        mines: defaultSettingsForTable.expert.mines,
+      },
+      {
+        key: "4",
+        type: "Custom",
+        height: defaultSettingsForTable.custom.height,
+        width: defaultSettingsForTable.custom.width,
+        mines: defaultSettingsForTable.custom.mines,
+      },
+    ];
+
+    const rowSelection = (selectedRowKeys: React.Key[]) => {
+      setLocalSettings({
+        ...localSettings,
+        selectedRowKeys: selectedRowKeys,
+      });
+    };
+
+    return (
+      <Table
+        bordered
+        pagination={false}
+        rowSelection={{
+          type: "radio",
+          selectedRowKeys: localSettings.selectedRowKeys,
+          onChange: rowSelection,
+          getCheckboxProps: (record: DataType) => {
+            return {
+              disabled: record.type === "Disabled User", // Column configuration not to be checked
+              name: record.type,
+            };
+          },
+        }}
+        columns={columns}
+        dataSource={data}
+      />
+    );
+  };
+
+  const getTable = () => {
+    return <div>{typeGameTable()}</div>;
+  };
+
   if (redux.user.username.length === 0) {
     return null;
   }
 
   return (
     <div>
-      <Space>
-        <Button type="primary" onClick={() => setIsModalVisible(true)}>
-          Settings
-        </Button>
-      </Space>
+      <Button type="primary" onClick={() => setIsModalVisible(true)}>
+        Settings
+      </Button>
       <Modal
         title={"Settings"}
         visible={isModalVisible}
-        footer={[]}
+        onOk={(vv) => {
+          console.log("ok");
+          setLoading(true);
+          saveSettings();
+          setLoading(false);
+          setIsModalVisible(false);
+        }}
         onCancel={formChancel}
         width={"40%"}
       >
-        {getForm()}
+        {getTable()}
+        {/* {getForm()} */}
       </Modal>
     </div>
   );

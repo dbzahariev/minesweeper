@@ -21,7 +21,6 @@ export default function Login() {
         registerUser(userInfo);
       }
     }
-    // eslint-disable-next-line
   }, [userInfo]);
 
   const logInUser = ({

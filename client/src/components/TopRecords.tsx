@@ -31,7 +31,6 @@ export default function TopRecords({
   }, [reload, user, redux]);
 
   const getAllGames = () => {
-    console.log("Get games");
     if (!user) {
       return null;
     }
