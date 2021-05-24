@@ -1,7 +1,7 @@
 import Minesweeper from "./Minesweeper";
 import "../styles/Button.scss";
 import "../styles/Minesweeper.scss";
-import { notification } from "antd";
+import { notification, Space } from "antd";
 // eslint-disable-next-line
 import { useEffect, useState } from "react";
 import LoginMini from "./LoginMini";
@@ -50,19 +50,6 @@ export default function App({ redux }: { redux: TypeRedux }) {
     // eslint-disable-next-line
   }, [redux.todos.find((el) => el.username === redux.user.username)?.settings]);
 
-  // if (MAX_ROWS === -1 && redux.user.username.length > 0) {
-  //   let oldRows = MAX_ROWS;
-  //   updateRows(redux);
-  //   let newRows = MAX_ROWS;
-  // }
-
-  // if (MAX_ROWS === -1 && redux.user.username) {
-  // updateRows(redux);
-  // }
-  // useEffect(() => {
-  //   // eslint-disable-next-line
-  // }, [redux.todos.find((el) => el.username === redux.user.username)?.settings]);
-
   return (
     <div
       style={{
@@ -73,10 +60,12 @@ export default function App({ redux }: { redux: TypeRedux }) {
       }}
     >
       <div style={{ width: "100%", height: "100%" }}>
-        <LoginMini redux={redux} />
+        <Space>
+          <LoginMini redux={redux} />
+          <Settings redux={redux} />
+        </Space>
         {redux.user.username.length > 0 ? (
           <>
-            <Settings redux={redux} />
             {MAX_ROWS !== -1 ? (
               <Minesweeper
                 redux={redux}

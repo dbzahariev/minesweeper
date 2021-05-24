@@ -13,8 +13,6 @@ export default function TopRecords({
   redux: TypeRedux;
   reload: number;
 }) {
-  // const { user } = useContext(UserContext);
-
   const user = redux.user.username;
 
   const [statistic, setStatistic] =
@@ -104,7 +102,11 @@ export default function TopRecords({
         </TabPane>
         <TabPane tab="Whole table" key="2">
           {/* <Table2 ownerName={user ? [user] : null} reload={props.reload} /> */}
-          <Table2 ownerName={user ? [user] : null} reload={reload} />
+          <Table2
+            ownerName={user ? [user] : null}
+            reload={reload}
+            redux={redux}
+          />
         </TabPane>
       </Tabs>
     </div>

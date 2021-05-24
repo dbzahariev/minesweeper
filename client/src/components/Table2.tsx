@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Space, Table, Typography } from "antd";
 import axios from "axios";
 import { ColumnsType } from "antd/lib/table";
-import { UserContext } from "../UserContext";
+import { TypeRedux } from "../assistants/Redux";
 
 type masterType = { time: number; date: string; owner: string };
 
@@ -26,17 +26,18 @@ type FilterFieldsType = {
 function Table2({
   ownerName = null,
   reload = 0,
+  redux,
 }: {
   ownerName: string[] | null;
   reload: number;
+  redux: TypeRedux;
 }) {
   const [data, setData] = useState<masterType[]>([]);
   const [filterFields, setFilterFields] = useState<FilterFieldsType[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sortTime, setSortTime] = useState<"descend" | "ascend" | null>(null);
+  const [sortType, setSortType] = useState<"descend" | "ascend" | null>(null);
 
   // eslint-disable-next-line
-  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     getAllGames();
@@ -105,18 +106,17 @@ function Table2({
     index: el.index,
   }));
 
-  const onChange = (a1: any, a2: any, a3: any, a4: any) => {
-    if (a4.action === "sort") {
-      if (sortTime === "descend") setSortTime(null);
-      if (sortTime === "ascend") setSortTime("descend");
-      if (sortTime === null) setSortTime("ascend");
+  const onChange = (
+    current: any,
+    owner: any,
+    order: any,
+    actionOnClick: any
+  ) => {
+    if (actionOnClick.action === "sort") {
+      if (sortType === "descend") setSortType(null);
+      if (sortType === "ascend") setSortType("descend");
+      if (sortType === null) setSortType("ascend");
     }
-  };
-
-  const getLoginUser = () => {
-    let username: string = user || "";
-    if (username) return [username];
-    else return null;
   };
 
   const columns: ColumnsType<dataSourceType> = [
@@ -134,14 +134,14 @@ function Table2({
       onFilter: (value: any, record: any) => {
         return value === record.owner;
       },
-      defaultFilteredValue: getLoginUser(),
+      defaultFilteredValue: [redux.user.username],
     },
     {
       title: "Time",
       dataIndex: "time",
       key: "time",
       sorter: (a: masterType, b: masterType) => a.time - b.time,
-      sortOrder: sortTime,
+      sortOrder: sortType,
     },
     {
       title: "Date",
@@ -174,7 +174,11 @@ function Table2({
         columns={columns}
         size="large"
         onChange={onChange}
-        pagination={{ position: ["bottomCenter"], size: "small" }}
+        pagination={{
+          position: ["bottomCenter"],
+          size: "small",
+          showSizeChanger: false,
+        }}
       />
     </div>
   );

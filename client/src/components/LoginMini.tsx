@@ -1,4 +1,5 @@
 import { Button, Form, Input, Modal, Space } from "antd";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { ACTIONS, TypeRedux } from "../assistants/Redux";
 import { showNotification } from "./App";
@@ -12,9 +13,13 @@ export default function LoginMini({ redux }: { redux: TypeRedux }) {
   useEffect(() => {
     let kk = redux.todos.find((el) => el.username === user);
     if (kk === undefined && user.length > 0) {
-      redux.dispatch({
-        type: ACTIONS.ADD_TODO,
-        payload: { username: user },
+      axios.get("/api").then((response) => {
+        let foo: any[] = response.data;
+        let dff = foo.find((el) => el.owner === user);
+        redux.dispatch({
+          type: ACTIONS.ADD_TODO,
+          payload: { username: user, settings: dff.settings },
+        });
       });
     }
   }, [redux, user]);

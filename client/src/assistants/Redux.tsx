@@ -30,7 +30,7 @@ export function reducer(
 
   switch (type) {
     case ADD_TODO:
-      let newTodosForAdd = [...todos, newTodo(payload.username)];
+      let newTodosForAdd = [newTodo(payload)];
       localStorage.setItem("todos", JSON.stringify(newTodosForAdd));
       return newTodosForAdd;
     case TOGGLE_TODO:
@@ -74,12 +74,12 @@ export function reducer(
   }
 }
 
-function newTodo(username: string) {
+function newTodo(reduxState: ReduxState) {
   let newTodo: ReduxState = {
     id: new Date(),
-    username: username,
+    username: reduxState.username,
     complete: false,
-    settings: `{"height":9,"width":9,"mines":10}`,
+    settings: reduxState.settings || `{"height":9,"width":9,"mines":10}`,
   };
   return newTodo;
 }

@@ -108,7 +108,6 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
                 type: ACTIONS.SET_SETTINGS,
                 payload: { username: user, settings: newSettings },
               });
-              // props.setReload(props.reload + 1);
             })
             .catch((err) => console.error(err));
         }
@@ -443,6 +442,10 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
       </Form>
     );
   };
+
+  if (redux.user.username.length === 0) {
+    return null;
+  }
 
   return (
     <div>
