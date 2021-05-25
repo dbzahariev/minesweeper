@@ -8,7 +8,6 @@ export default function LoginMini({ redux }: { redux: TypeRedux }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   let user = redux.user.username;
-  // const [user, setUser] = useState(localStorage.getItem("username") || "");
 
   useEffect(() => {
     let kk = redux.todos.find((el) => el.username === user);
@@ -42,7 +41,7 @@ export default function LoginMini({ redux }: { redux: TypeRedux }) {
       setLoading(true);
       redux.user.setUsername(username);
       // setUser(username);
-      localStorage.setItem("username", username);
+      sessionStorage.setItem("username", username);
       showNotification(`Hello ${username}!`, 1, "success");
       setLoading(false);
       setIsModalVisible(false);

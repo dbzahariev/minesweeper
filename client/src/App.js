@@ -6,11 +6,11 @@ import { reducer } from "./assistants/Redux";
 function App() {
   const [todos, dispatch] = useReducer(
     reducer,
-    JSON.parse(localStorage.getItem("todos")) || []
+    JSON.parse(sessionStorage.getItem("todos")) || []
   );
 
   const [username, setUsername] = useState(
-    localStorage.getItem("username") || ""
+    sessionStorage.getItem("username") || ""
   );
 
   // const [games, setGames] = useState([]);

@@ -31,7 +31,7 @@ export function reducer(
   switch (type) {
     case ADD_TODO:
       let newTodosForAdd = [newTodo(payload)];
-      localStorage.setItem("todos", JSON.stringify(newTodosForAdd));
+      sessionStorage.setItem("todos", JSON.stringify(newTodosForAdd));
       return newTodosForAdd;
     case TOGGLE_TODO:
       let newTodosForToggle = todos.map((todo) => {
@@ -40,11 +40,11 @@ export function reducer(
         }
         return todo;
       });
-      localStorage.setItem("todos", JSON.stringify(newTodosForToggle));
+      sessionStorage.setItem("todos", JSON.stringify(newTodosForToggle));
       return newTodosForToggle;
     case DELETE_TODO:
       let newTodosForDelete = todos.filter((todo) => todo.id !== payload.id);
-      localStorage.setItem("todos", JSON.stringify(newTodosForDelete));
+      sessionStorage.setItem("todos", JSON.stringify(newTodosForDelete));
       return newTodosForDelete;
     case SET_SETTINGS:
       let newTodosForSettings = todos.map((todo) => {
@@ -53,7 +53,7 @@ export function reducer(
         }
         return todo;
       });
-      localStorage.setItem("todos", JSON.stringify(newTodosForSettings));
+      sessionStorage.setItem("todos", JSON.stringify(newTodosForSettings));
       return newTodosForSettings;
     case ADD_GAME:
       let newTodosForAddGame = todos.map((todo) => {
@@ -67,7 +67,7 @@ export function reducer(
         }
         return todo;
       });
-      localStorage.setItem("todos", JSON.stringify(newTodosForAddGame));
+      sessionStorage.setItem("todos", JSON.stringify(newTodosForAddGame));
       return newTodosForAddGame;
     default:
       return todos;
