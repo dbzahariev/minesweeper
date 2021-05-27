@@ -10,9 +10,6 @@ const PORT = process.env.PORT || 8080;
 
 const routesApi = require("./routes/api");
 
-let url =
-  "mongodb+srv://ramsess90:Abc123456@cluster0.ewmw7.mongodb.net/Minesweeper?retryWrites=true&w=majority";
-
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
