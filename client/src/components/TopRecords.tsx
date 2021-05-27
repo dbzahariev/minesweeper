@@ -45,11 +45,15 @@ export default function TopRecords({
             return el.owner === user.toString();
           })[0]
           .games.sort((a: any, b: any) => a.time - b.time);
-        bestRecords = newData[0];
+        bestRecords = newData[0] || 0;
 
         let averageTime =
           newData.reduce((total, next) => total + next.time, 0) /
           newData.length;
+
+        if (newData.length === 0) {
+          averageTime = 0;
+        }
 
         averageTime = Number((Math.round(averageTime * 100) / 100).toFixed(2));
 

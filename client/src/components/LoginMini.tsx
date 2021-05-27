@@ -15,6 +15,7 @@ export default function LoginMini({ redux }: { redux: TypeRedux }) {
       axios.get("/api").then((response) => {
         let foo: any[] = response.data;
         let dff = foo.find((el) => el.owner === user);
+
         redux.dispatch({
           type: ACTIONS.ADD_TODO,
           payload: { username: user, settings: dff.settings },
@@ -37,15 +38,43 @@ export default function LoginMini({ redux }: { redux: TypeRedux }) {
 
   const getForm = () => {
     const onFinish = (values: any) => {
-      let username: string = values.username;
-      setLoading(true);
-      redux.user.setUsername(username);
-      // setUser(username);
-      sessionStorage.setItem("username", username);
-      showNotification(`Hello ${username}!`, 1, "success");
-      setLoading(false);
-      setIsModalVisible(false);
-      window.location.reload();
+      axios.get("/api").then((response) => {
+        let username: string = values.username;
+        let foo: any[] = response.data;
+        let dff = foo.find((el) => el.owner === username);
+        if (!dff) {
+          axios({
+            method: "POST",
+            data: { owner: username, games: [] },
+            withCredentials: true,
+            url: `/api/create`,
+          })
+            .then((res) => {
+              setLoading(true);
+              redux.user.setUsername(username);
+              sessionStorage.setItem("username", username);
+              showNotification(`Hello ${username}!`, 1, "success");
+              setLoading(false);
+              setIsModalVisible(false);
+              redux.dispatch({
+                type: ACTIONS.ADD_TODO,
+                payload: { username: user },
+              });
+            })
+            .catch((err) => console.error(err));
+        } else {
+          setLoading(true);
+          redux.user.setUsername(username);
+          sessionStorage.setItem("username", username);
+          showNotification(`Hello ${username}!`, 1, "success");
+          setLoading(false);
+          setIsModalVisible(false);
+          redux.dispatch({
+            type: ACTIONS.ADD_TODO,
+            payload: { username: user, settings: dff.settings },
+          });
+        }
+      });
     };
 
     return (
