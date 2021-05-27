@@ -22,14 +22,14 @@ export const showNotification = (
 };
 
 export const updateRows = (redux: TypeRedux) => {
-  let kk: { height: number; width: number; mines: number } = JSON.parse(
+  let settings: { height: number; width: number; mines: number } = JSON.parse(
     redux.todos.find((el) => el.username === redux.user.username)?.settings ||
       `{"height":9,"width":9,"mines":11}`
   );
   let newSett: { rows: number; cols: number; bombs: number } = {
-    rows: kk.height,
-    cols: kk.width,
-    bombs: kk.mines,
+    rows: settings.height,
+    cols: settings.width,
+    bombs: settings.mines,
   };
 
   ChangeCost(newSett.rows, newSett.cols, newSett.bombs);

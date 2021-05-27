@@ -10,15 +10,15 @@ export default function LoginMini({ redux }: { redux: TypeRedux }) {
   let user = redux.user.username;
 
   useEffect(() => {
-    let kk = redux.todos.find((el) => el.username === user);
-    if (kk === undefined && user.length > 0) {
+    let loginUser = redux.todos.find((el) => el.username === user);
+    if (loginUser === undefined && user.length > 0) {
       axios.get("/api").then((response) => {
-        let foo: any[] = response.data;
-        let dff = foo.find((el) => el.owner === user);
+        let responseData: any[] = response.data;
+        let foundedUser = responseData.find((el) => el.owner === user);
 
         redux.dispatch({
           type: ACTIONS.ADD_TODO,
-          payload: { username: user, settings: dff.settings },
+          payload: { username: user, settings: foundedUser.settings },
         });
       });
     }
@@ -40,9 +40,9 @@ export default function LoginMini({ redux }: { redux: TypeRedux }) {
     const onFinish = (values: any) => {
       axios.get("/api").then((response) => {
         let username: string = values.username;
-        let foo: any[] = response.data;
-        let dff = foo.find((el) => el.owner === username);
-        if (!dff) {
+        let responseData: any[] = response.data;
+        let foundedUser = responseData.find((el) => el.owner === username);
+        if (!foundedUser) {
           axios({
             method: "POST",
             data: { owner: username, games: [] },
@@ -71,7 +71,7 @@ export default function LoginMini({ redux }: { redux: TypeRedux }) {
           setIsModalVisible(false);
           redux.dispatch({
             type: ACTIONS.ADD_TODO,
-            payload: { username: user, settings: dff.settings },
+            payload: { username: user, settings: foundedUser.settings },
           });
         }
       });

@@ -35,8 +35,8 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
   const user = sessionStorage.getItem("username") || "";
 
   useEffect(() => {
-    let kk = redux.todos.find((el) => el.username === user);
-    if (kk === undefined && user.length > 0) {
+    let loginUser = redux.todos.find((el) => el.username === user);
+    if (loginUser === undefined && user.length > 0) {
       redux.dispatch({
         type: ACTIONS.ADD_TODO,
         payload: { username: user },
@@ -45,13 +45,12 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
   }, [redux, user]);
 
   const getDefSelectedRow = () => {
-    let res = {
-      ssR: defaultSettingsForTable.selectedRowKeys,
-      cs: defaultSettingsForTable.custom,
+    let settings = {
+      selectedRowKeys: defaultSettingsForTable.selectedRowKeys,
+      customSettings: defaultSettingsForTable.custom,
     };
-    // return res;
 
-    res.ssR = defaultSettingsForTable.selectedRowKeys;
+    settings.selectedRowKeys = defaultSettingsForTable.selectedRowKeys;
     let mySettings = redux.todos.find((el) => el.username === user)?.settings;
     if (mySettings) {
       let savedSelectedRowKeys = JSON.parse(mySettings) as {
@@ -60,19 +59,20 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
         mines: number;
         width: number;
       };
-      //ssR
-      res.ssR = savedSelectedRowKeys.selectedRowKeys;
+      settings.selectedRowKeys = savedSelectedRowKeys.selectedRowKeys;
 
-      //cs
-      if (res?.ssR && res.ssR[0].toString() === "4") {
-        res.cs = {
+      if (
+        settings?.selectedRowKeys &&
+        settings.selectedRowKeys[0].toString() === "4"
+      ) {
+        settings.customSettings = {
           height: savedSelectedRowKeys.height,
           width: savedSelectedRowKeys.width,
           mines: savedSelectedRowKeys.mines,
         };
       }
     }
-    return res;
+    return settings;
   };
 
   const [localSettings, setLocalSettings] = useState<{
@@ -83,8 +83,8 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
     };
     selectedRowKeys: React.Key[];
   }>({
-    customSettings: getDefSelectedRow().cs,
-    selectedRowKeys: getDefSelectedRow().ssR,
+    customSettings: getDefSelectedRow().customSettings,
+    selectedRowKeys: getDefSelectedRow().selectedRowKeys,
   });
 
   const saveSettings = () => {
@@ -355,9 +355,9 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
       {
         key: "4",
         type: "Custom",
-        height: getDefSelectedRow().cs.height,
-        width: getDefSelectedRow().cs.width,
-        mines: getDefSelectedRow().cs.mines,
+        height: getDefSelectedRow().customSettings.height,
+        width: getDefSelectedRow().customSettings.width,
+        mines: getDefSelectedRow().customSettings.mines,
       },
     ];
 
@@ -389,10 +389,6 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
     );
   };
 
-  // const getTable = () => {
-  //   return <div>{typeGameTable()}</div>;
-  // };
-
   if (redux.user.username.length === 0) {
     return null;
   }
@@ -405,8 +401,7 @@ export default function Settings({ redux }: { redux: TypeRedux }) {
       <Modal
         title={"Settings"}
         visible={isModalVisible}
-        onOk={(vv) => {
-          console.log("ok");
+        onOk={() => {
           setLoading(true);
           saveSettings();
           setLoading(false);

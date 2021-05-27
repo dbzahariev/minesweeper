@@ -6,6 +6,15 @@ import Table2 from "./Table2";
 
 const { TabPane } = Tabs;
 
+type StatisticsType = {
+  bestRecords: {
+    date: string;
+    time: number;
+  };
+  averageTime: number;
+  allRecordsCount: number;
+};
+
 export default function TopRecords({
   redux,
   reload,
@@ -15,15 +24,7 @@ export default function TopRecords({
 }) {
   const user = redux.user.username;
 
-  const [statistic, setStatistic] =
-    useState<{
-      bestRecords: {
-        date: string;
-        time: number;
-      };
-      averageTime: number;
-      allRecordsCount: number;
-    } | null>(null);
+  const [statistic, setStatistic] = useState<StatisticsType | null>(null);
 
   useEffect(() => {
     getAllGames();
@@ -57,35 +58,36 @@ export default function TopRecords({
 
         averageTime = Number((Math.round(averageTime * 100) / 100).toFixed(2));
 
-        let kk = { bestRecords, averageTime, allRecordsCount: newData.length };
+        let statistic: StatisticsType = {
+          bestRecords,
+          averageTime,
+          allRecordsCount: newData.length,
+        };
 
-        setStatistic(kk);
+        setStatistic(statistic);
       })
       .catch((err) => {
         console.error(err);
       });
   };
 
-  const getBestTimes = () => {
-    if (statistic) {
-      let kk = (
-        <Space direction="vertical">
-          <Typography.Text>{`Best time is ${
-            statistic.bestRecords.time
-          } on ${new Date(statistic.bestRecords.date).toLocaleString(
-            "bg-bg"
-          )}`}</Typography.Text>
-          <Typography.Text>
-            {`Average time is ${statistic.averageTime} (seconds) for ${
-              statistic.allRecordsCount
-            } ${statistic.allRecordsCount === 1 ? "game" : "games"}`}
-          </Typography.Text>
-        </Space>
-      );
-      return kk;
-    }
-    return null;
+  const getBestTimes = (statistic: StatisticsType) => {
+    return (
+      <Space direction="vertical">
+        <Typography.Text>{`Best time is ${
+          statistic.bestRecords.time
+        } on ${new Date(statistic.bestRecords.date).toLocaleString(
+          "bg-bg"
+        )}`}</Typography.Text>
+        <Typography.Text>
+          {`Average time is ${statistic.averageTime} (seconds) for ${
+            statistic.allRecordsCount
+          } ${statistic.allRecordsCount === 1 ? "game" : "games"}`}
+        </Typography.Text>
+      </Space>
+    );
   };
+
   if (user.length === 0 || statistic === null) {
     return null;
   }
@@ -99,9 +101,7 @@ export default function TopRecords({
     >
       <Tabs defaultActiveKey="1">
         <TabPane tab="Top Records" key="1">
-          <div style={{}}>
-            <Space direction="vertical">{getBestTimes()}</Space>
-          </div>
+          {statistic ? getBestTimes(statistic) : null}
         </TabPane>
         <TabPane tab="Whole table" key="2">
           {/* <Table2 ownerName={user ? [user] : null} reload={props.reload} /> */}
