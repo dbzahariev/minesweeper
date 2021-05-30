@@ -25,6 +25,9 @@
 }
 
 .Button {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
   background-color: transparent;
   @include borders;
 
